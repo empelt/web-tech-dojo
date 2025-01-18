@@ -75,3 +75,4 @@ jobs:
       # Firebase Hosting にデプロイ
       - name: Deploy to Hosting
         run: firebase deploy --only hosting
+        working-directory: ./frontend
