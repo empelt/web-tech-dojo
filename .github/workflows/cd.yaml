@@ -24,7 +24,7 @@ jobs:
         id: filter
         with:
           filters: |
-            src:
+            frontend:
               - 'frontend/src/**'
 
   # Firebase Hosting にデプロイ
