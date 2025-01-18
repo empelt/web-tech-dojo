@@ -8,7 +8,8 @@ export default tseslint.config(
   { ignores: ['dist'] },
   {
     extends: [
-      js.configs.recommended,
+      tseslint.configs.recommendedTypeChecked,
+      ...tseslint.configs.stylisticTypeChecked,
       ...tseslint.configs.recommended,
       'prettier',
     ],
