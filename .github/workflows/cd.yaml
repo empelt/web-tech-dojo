@@ -52,6 +52,7 @@ jobs:
       # 依存関係のインストール
       - name: Install dependencies
         run: npm install
+        working-directory: ./frontend
 
       # Firebase CLI のインストール
       - name: Install Firebase Tools
@@ -69,6 +70,7 @@ jobs:
       # ビルド
       - name: Build
         run: npm run build
+        working-directory: ./frontend
 
       # Firebase Hosting にデプロイ
       - name: Deploy to Hosting
