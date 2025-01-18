@@ -74,4 +74,4 @@ jobs:
 
       # Firebase Hosting にデプロイ
       - name: Deploy to Hosting
-        run: firebase deploy --only hosting --project=${{ secrets.PROJECT_ID }}
+        run: firebase deploy --only hosting
