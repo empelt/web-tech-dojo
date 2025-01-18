@@ -1,0 +1,75 @@
+name: CD
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  changes:
+    name: Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      hosting: ${{ steps.filter.outputs.hosting }}
+    steps:
+      # ソースコードをチェックアウト
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      # Firebase のどのサービスに変更が加えられるかをチェックする
+      - name: Detect changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            hosting:
+              - 'hosting/**'
+
+  # Firebase Hosting にデプロイ
+  deploy_hosting:
+    name: Deploy Hosting
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.hosting == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    timeout-minutes: 15
+    steps:
+      # ソースコードをチェックアウト
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      # Node.js のセットアップ
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.1.1
+        with:
+          node-version: 22
+
+      # 依存関係のインストール
+      - name: Install dependencies
+        run: npm install
+
+      # Firebase CLI のインストール
+      - name: Install Firebase Tools
+        run: npm install -g firebase-tools
+
+      # 認証
+      - name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+          create_credentials_file: true
+          export_environment_variables: true
+
+      # ビルド
+      - name: Build
+        run: npm run build
+
+      # Firebase Hosting にデプロイ
+      - name: Deploy to Hosting
+        run: firebase deploy --only hosting --project=${{ secrets.PROJECT_ID }}
