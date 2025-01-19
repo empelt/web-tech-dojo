@@ -7,12 +7,6 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o server ./cmd/main.go
+EXPOSE 8080
 
-FROM gcr.io/distroless/base-debian11
-
-WORKDIR /app
-
-COPY --from=build /app/server .
-
-CMD ["./server"]
+CMD ["go", "run", "cmd/main.go"]
