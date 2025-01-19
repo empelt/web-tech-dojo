@@ -95,6 +95,9 @@ jobs:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT_FOR_CLOUD_RUN }}
           create_credentials_file: true
+      
+      - name: Configure Docker
+        run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
 
       - name: Build Docker Image
         run: |
