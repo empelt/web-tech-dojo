@@ -98,7 +98,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/web-tech-dojo-backend/cloud-run-image:$GITHUB_SHA
+          docker build -t asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/web-tech-dojo-backend/cloud-run-image:$GITHUB_SHA .
 
       - name: Push Docker Image to Artifact Registry
         run: |
