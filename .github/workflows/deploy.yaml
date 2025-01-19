@@ -1,0 +1,111 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  changes:
+    name: Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Detect changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/src/**'
+            backend:
+              - 'backend/**'
+      
+  deploy_hosting:
+    name: Deploy Hosting
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.1.1
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Firebase Tools
+        run: npm install -g firebase-tools
+
+      - name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT_FOR_HOSTING }}
+          create_credentials_file: true
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Hosting
+        run: firebase deploy --only hosting
+  
+  deploy_cloud_run:
+    name: Deploy Cloud Run
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT_FOR_CLOUD_RUN }}
+          create_credentials_file: true
+      
+      - name: Configure Docker
+        run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+
+      - name: Build Docker Image
+        run: |
+          docker build -t asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/web-tech-dojo-backend/cloud-run-image:$GITHUB_SHA .
+
+      - name: Push Docker Image to Artifact Registry
+        run: |
+          docker push asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/web-tech-dojo-backend/cloud-run-image:$GITHUB_SHA
+
+      - name: deploy
+        run: gcloud run deploy web-tech-dojo-backend --image asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/web-tech-dojo-backend/cloud-run-image:$GITHUB_SHA --update-labels ^,^managed-by=github-actions,commit-sha=$GITHUB_SHA --format json --region asia-northeast1
