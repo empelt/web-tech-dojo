@@ -102,7 +102,7 @@ jobs:
 
       - name: Push Docker Image to Artifact Registry
         run: |
-          docker push LOCATION-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/REPOSITORY_NAME/IMAGE_NAME:$GITHUB_SHA
+          docker push asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/web-tech-dojo-backend/cloud-run-image:$GITHUB_SHA
 
       - id: 'deploy'
         uses: 'google-github-actions/deploy-cloudrun@v2'
