@@ -37,6 +37,9 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       # ソースコードをチェックアウト
       - name: Check out repository
@@ -51,7 +54,6 @@ jobs:
       # 依存関係のインストール
       - name: Install dependencies
         run: npm install
-        working-directory: ./frontend
 
       # Firebase CLI のインストール
       - name: Install Firebase Tools
@@ -62,15 +64,13 @@ jobs:
         uses: "google-github-actions/auth@v1"
         with:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT_FOR_HOSTING }}
           create_credentials_file: true
 
       # ビルド
       - name: Build
         run: npm run build
-        working-directory: ./frontend
 
       # Firebase Hosting にデプロイ
       - name: Deploy to Hosting
         run: firebase deploy --only hosting
-        working-directory: ./frontend
