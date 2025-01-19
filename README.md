@@ -1,5 +1,5 @@
 # web-tech-dojo
-https://webtechdojo-448206.web.app/
+https://web-tech-dojo.benzen-games.com/
 
 <div id="top"></div>
 
@@ -26,7 +26,7 @@ https://webtechdojo-448206.web.app/
 2. [環境](#環境)
 3. [ディレクトリ構成](#ディレクトリ構成)
 4. [開発環境構築](#開発環境構築)
-5. [トラブルシューティング](#トラブルシューティング)
+5. [環境変数の一覧](#環境変数の一覧)
 
 
 ## プロジェクト名
@@ -80,6 +80,6 @@ WebTechDojoは、Web技術に特化した学習をサポートするためのイ
 
 | 変数名 | 役割 | デフォルト値  | DEV 環境での値 |
 | ---------------------- | ----------------------------------------- | ---------------------------------- | ---------------------------------------- |
-| SERVICE_ACCOUNT_FOR_APP_ENGINE | APP ENGINE用のサービスアカウント | secret ||
+| SERVICE_ACCOUNT_FOR_CLOUD_FUNCTIONS | Cloud Functions用のサービスアカウント | secret ||
 | SERVICE_ACCOUNT_FOR_HOSTING | Hosting用のサービスアカウント | secret ||
 | WORKLOAD_IDENTITY_PROVIDER | Workload Identity用のプロバイダー | secret ||
