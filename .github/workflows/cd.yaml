@@ -65,14 +65,6 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
           create_credentials_file: true
 
-      # 鍵ファイルの存在確認
-      - name: Check credentials file
-        run: ls -l $GOOGLE_APPLICATION_CREDENTIALS
-
-      # 環境変数のエクスポート
-      - name: Export GOOGLE_APPLICATION_CREDENTIALS
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS" >> $GITHUB_ENV
-
       # ビルド
       - name: Build
         run: npm run build
@@ -80,5 +72,5 @@ jobs:
 
       # Firebase Hosting にデプロイ
       - name: Deploy to Hosting
-        run: firebase deploy --only hosting
+        run: firebase deploy --only hosting project_id = ${{ secrets.PROJECT_ID }}
         working-directory: ./frontend
