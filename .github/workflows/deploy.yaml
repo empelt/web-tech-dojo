@@ -18,22 +18,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Detect frontend changes
+      - name: Detect changes
         uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: |
             frontend:
               - 'frontend/src/**'
-      
-      - name: Detect backend changes
-        uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
             backend:
               - 'backend/**'
-
+      
   deploy_hosting:
     name: Deploy Hosting
     needs:
