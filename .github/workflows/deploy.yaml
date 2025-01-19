@@ -107,9 +107,5 @@ jobs:
         run: |
           docker push asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/web-tech-dojo-backend/cloud-run-image:$GITHUB_SHA
 
-      - id: 'deploy'
-        uses: 'google-github-actions/deploy-cloudrun@v2'
-        with: 
-          service: 'web-tech-dojo-backend'
-          image: asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/web-tech-dojo-backend/cloud-run-image:${GITHUB_SHA}
-          region: 'asia-northeast1'
+      - name: deploy
+        run: gcloud run deploy web-tech-dojo-backend --image asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/web-tech-dojo-backend/cloud-run-image:$GITHUB_SHA --update-labels ^,^managed-by=github-actions,commit-sha=$GITHUB_SHA --format json --region asia-northeast1
