@@ -37,7 +37,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    timeout-minutes: 15
     steps:
       # ソースコードをチェックアウト
       - name: Check out repository
@@ -65,7 +64,14 @@ jobs:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
           create_credentials_file: true
-          export_environment_variables: true
+
+      # 鍵ファイルの存在確認
+      - name: Check credentials file
+        run: ls -l $GOOGLE_APPLICATION_CREDENTIALS
+
+      # 環境変数のエクスポート
+      - name: Export GOOGLE_APPLICATION_CREDENTIALS
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS" >> $GITHUB_ENV
 
       # ビルド
       - name: Build
