@@ -72,5 +72,5 @@ jobs:
 
       # Firebase Hosting にデプロイ
       - name: Deploy to Hosting
-        run: firebase deploy --only hosting project_id = ${{ secrets.PROJECT_ID }}
+        run: firebase deploy --only hosting project_id=${{ secrets.PROJECT_ID }}
         working-directory: ./frontend
