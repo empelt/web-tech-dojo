@@ -39,12 +39,12 @@ WebTechDojo は、Web 技術に特化した学習をサポートするための�
 
 ## 環境
 
-- フロントエンド: React, Typescript, Tailwind CSS, Shadcn UI
-- バックエンド: Go, echo (Cloud Functions)
+- フロントエンド: React, Typescript, Tailwind CSS, shadcn/ui
+- バックエンド: Go, Echo
 - AI モデル: Google Cloud's Vertex AI
-- インフラ: Google Cloud Functions, Firebase
+- インフラ: Google Cloud Run, Firebase
 
-その他のパッケージのバージョンは package.json を参照してください
+その他のパッケージは package.json を参照してください
 
 ## ディレクトリ構成
 
@@ -59,7 +59,20 @@ WebTechDojo は、Web 技術に特化した学習をサポートするための�
 
 ## 開発環境構築
 
-後で書く
+docker を使わずに開発する場合は，それぞれ frontend ディレクトリ，backend ディレクトリ配下の README を参照してください。
+
+```
+### Windows
+知らん
+
+### Ubuntu(WSL)
+sudo apt install docker-compose
+sudo docker-compose up --build -d
+
+### Mac
+brew install docker-compose
+docker-compose up --build -d
+```
 
 ### 環境変数の一覧
 
