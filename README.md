@@ -1,4 +1,5 @@
 # web-tech-dojo
+
 https://web-tech-dojo.benzen-games.com/
 
 <div id="top"></div>
@@ -28,58 +29,42 @@ https://web-tech-dojo.benzen-games.com/
 4. [開発環境構築](#開発環境構築)
 5. [環境変数の一覧](#環境変数の一覧)
 
-
 ## プロジェクト名
+
 Web Tech Dojo
 
 ## プロジェクトについて
 
-WebTechDojoは、Web技術に特化した学習をサポートするためのインタラクティブなトレーニングプラットフォームです。このアプリは、ユーザーが技術的な質問に答えたり、理解が浅い箇所をAIが自動的に見つけ出し、深堀りの質問を提示することで、効率的な学習を促します。
+WebTechDojo は、Web 技術に特化した学習をサポートするためのインタラクティブなトレーニングプラットフォームです。このアプリは、ユーザーが技術的な質問に答えたり、理解が浅い箇所を AI が自動的に見つけ出し、深堀りの質問を提示することで、効率的な学習を促します。
 
 ## 環境
 
 - フロントエンド: React, Typescript, Tailwind CSS, Shadcn UI
 - バックエンド: Go, echo (Cloud Functions)
-- AIモデル: Google Cloud's Vertex AI
+- AI モデル: Google Cloud's Vertex AI
 - インフラ: Google Cloud Functions, Firebase
 
 その他のパッケージのバージョンは package.json を参照してください
 
 ## ディレクトリ構成
 
+後で書く
+
 ```
 .
-├── .github
-│   ├── pull_request_template.md
-│   └── workflows
-|       └── cd.yaml
 ├── backend
-│   ├── hogehoge
-│   └── README.md
 ├── frontend
-│   ├── src
-│   ├── .firebaserc
-│   ├── .gitignore
-│   ├── eslint.config.js
-│   ├── firebase.json
-|   ├── package-lock.json
-│   ├── package.json
-│   ├── README.md
-│   ├── tsconfig.app.json
-│   ├── tsconfig.json
-│   ├── tsconfig.node.json
-│   └── vite.config.ts
 └── README.md
 ```
 
 ## 開発環境構築
-後で書く
 
+後で書く
 
 ### 環境変数の一覧
 
-| 変数名 | 役割 | デフォルト値  | DEV 環境での値 |
-| ---------------------- | ----------------------------------------- | ---------------------------------- | ---------------------------------------- |
-| SERVICE_ACCOUNT_FOR_CLOUD_FUNCTIONS | Cloud Functions用のサービスアカウント | secret ||
-| SERVICE_ACCOUNT_FOR_HOSTING | Hosting用のサービスアカウント | secret ||
-| WORKLOAD_IDENTITY_PROVIDER | Workload Identity用のプロバイダー | secret ||
+| 変数名                              | 役割                                   | デフォルト値 | DEV 環境での値 |
+| ----------------------------------- | -------------------------------------- | ------------ | -------------- |
+| SERVICE_ACCOUNT_FOR_CLOUD_FUNCTIONS | Cloud Functions 用のサービスアカウント | secret       |                |
+| SERVICE_ACCOUNT_FOR_HOSTING         | Hosting 用のサービスアカウント         | secret       |                |
+| WORKLOAD_IDENTITY_PROVIDER          | Workload Identity 用のプロバイダー     | secret       |                |
