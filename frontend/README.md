@@ -4,7 +4,12 @@ Web Tech Dojoのフロントエンド(React)です。
 
 ## 環境構築
 
-後で書く
+dockerで起動する場合は，プロジェクトルートのREADMEを参照してください。
+
+```
+$ npm i
+$ npm run dev
+```
 
 ## ディレクトリ構成と実装方針
 
@@ -30,7 +35,7 @@ frontend
 └── vite.config.ts
 ```
 
-### 環境変数の一覧
+## 環境変数の一覧
 
 .env.localを作成して以下の環境変数を設定してください
 
@@ -44,3 +49,13 @@ frontend
 | VITE_FIREBASE_APP_ID              | FirebaseプロジェクトのアプリケーションID      |              |                |
 | VITE_FIREBASE_MEASUREMENT_ID      | Google Analyticsの計測ID                      |              |                |
 | VITE_BACKEND_URL                  | アプリケーションがアクセスするバックエンドURL |              |                |
+
+## 開発方法
+
+UIテンプレートとして [shadcn/ui](https://ui.shadcn.com/) を利用しています。
+
+以下のように，CLIでコンポーネントの追加ができます。
+
+```
+$ npx shadcn@latest add button
+```
