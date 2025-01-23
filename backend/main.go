@@ -1,9 +1,10 @@
 package main
 
 import (
-	"net/http"
-
 	"os"
+
+	"github.com/empelt/web-tech-dojo/handler"
+	"github.com/empelt/web-tech-dojo/validator"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -22,8 +23,10 @@ func main() {
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAuthorization},
 		AllowCredentials: true,
 	}))
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
+	e.Validator = validator.NewValidator()
+
+	api := e.Group("/api")
+	h := handler.NewHandler()
+	h.Register(api)
 	e.Logger.Fatal(e.Start(":" + port))
 }
