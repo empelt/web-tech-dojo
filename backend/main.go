@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"os"
 
-	"github.com/empelt/web-tech-dojo/handler"
+	"github.com/empelt/web-tech-dojo/handlers"
+	"github.com/empelt/web-tech-dojo/infrastructures"
+	"github.com/empelt/web-tech-dojo/services"
 	"github.com/empelt/web-tech-dojo/validator"
 
 	"github.com/labstack/echo/v4"
@@ -25,8 +28,23 @@ func main() {
 	}))
 	e.Validator = validator.NewValidator()
 
-	api := e.Group("/api")
-	h := handler.NewHandler()
-	h.Register(api)
+	ctx := context.Background()
+
+	genaiClient, err := infrastructures.New(ctx)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	service, err := services.New(genaiClient)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	handler, err := handlers.New(service)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	e.POST("/api/chat", handler.PostChatMessage)
 	e.Logger.Fatal(e.Start(":" + port))
 }
