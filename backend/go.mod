@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go/vertexai v0.13.3
 	github.com/go-playground/validator/v10 v10.24.0
 	github.com/labstack/echo/v4 v4.13.3
+	go.uber.org/mock v0.5.0
 )
 
 require (
