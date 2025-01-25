@@ -37,7 +37,7 @@ backend
 ├── go.mod
 ├── go.sum
 ├── main.go
-├── README.md
+└── README.md
 ```
 
 main.go → handlers → services → infrastructures の一方通行の package 依存関係です。
