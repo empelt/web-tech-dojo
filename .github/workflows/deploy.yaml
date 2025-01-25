@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - mikage32/cloud-run-deploy
+      - milage32/cloud-run-deploy
 
 jobs:
   
