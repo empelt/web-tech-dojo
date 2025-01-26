@@ -1,8 +1,9 @@
-import fs from "fs"
-import path from "path"
-import { faker } from "@faker-js/faker"
+import fs from 'fs'
+import path from 'path'
 
-import { labels, priorities, statuses } from "./data"
+import { faker } from '@faker-js/faker'
+
+import { labels, priorities, statuses } from './data'
 
 const tasks = Array.from({ length: 100 }, () => ({
   id: `TASK-${faker.number.int({ min: 1000, max: 9999 })}`,
@@ -13,8 +14,8 @@ const tasks = Array.from({ length: 100 }, () => ({
 }))
 
 fs.writeFileSync(
-  path.join(__dirname, "tasks.json"),
-  JSON.stringify(tasks, null, 2)
+  path.join(__dirname, 'tasks.json'),
+  JSON.stringify(tasks, null, 2),
 )
 
-console.log("✅ Tasks data generated.")
+console.log('✅ Tasks data generated.')
