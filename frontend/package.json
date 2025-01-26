@@ -58,8 +58,10 @@
     "tabWidth": 2
   },
   "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ],
     "*.{js,jsx,ts,tsx,css,html,md,json,cjs}": [
-      "eslint --fix",
       "prettier --write"
     ]
   }
