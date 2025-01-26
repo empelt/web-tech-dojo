@@ -1,32 +1,69 @@
-import { columns } from './components/columns'
-import { DataTable } from './components/data-table'
+import { useMemo, useState } from 'react'
 
-const tasks = [
+import QuestionsTable from './components/table'
+import Toolbar from './components/toolbar'
+
+import { Question } from '@/types/question'
+
+const questions: Question[] = [
   {
     id: '1',
-    title: 'Task 1',
-    status: 'Description for Task 1',
-    label: 'documentation',
-    priority: 'medium',
+    title: 'How to use React Query?',
+    tags: ['react', 'query'],
+    isBookmarked: false,
+    progress: 0,
   },
   {
     id: '2',
-    title: 'Task 2',
-    status: 'Description for Task 2',
-    label: 'bug',
-    priority: 'high',
+    title: 'How to use React Table?',
+    tags: ['react', 'table'],
+    isBookmarked: false,
+    progress: 20,
   },
   {
     id: '3',
-    title: 'Task 3',
-    status: 'Description for Task 3',
-    label: 'feature',
-    priority: 'low',
+    title: 'How to use React Hook Form?',
+    tags: ['react', 'hook', 'form'],
+    isBookmarked: false,
+    progress: 80,
   },
 ]
 
 const Questions = () => {
-  return <DataTable columns={columns} data={tasks} />
+  const [title, setTitle] = useState<string>('')
+  const [selectedTagsValues, setSelectedTagsValues] = useState<Set<string>>(
+    new Set(),
+  )
+  const [selectedBookmarkValues, setSelectedBookmarkValues] = useState<
+    Set<string>
+  >(new Set())
+  const [selectedProgressValues, setSelectedProgressValues] = useState<
+    Set<string>
+  >(new Set())
+
+  const filterState = useMemo(
+    () => ({
+      title,
+      selectedTagsValues,
+      selectedBookmarkValues,
+      selectedProgressValues,
+      setTitle,
+      setSelectedTagsValues,
+      setSelectedBookmarkValues,
+      setSelectedProgressValues,
+    }),
+    [title, selectedTagsValues, selectedBookmarkValues, selectedProgressValues],
+  )
+
+  return (
+    <div className="container mx-auto">
+      <h1 className="text-2xl font-bold my-4">Questions</h1>
+      <div className="flex flex-col gap-4">
+        <Toolbar filterState={filterState} />
+        <QuestionsTable questions={questions} />
+      </div>
+    </div>
+  )
 }
 
 export default Questions
