@@ -1,3 +1,4 @@
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -5,11 +6,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
 type Props = {
-  imgSrc: string
   fallback: string
+  imgSrc: string
 }
 
 const DropdownAvatar = ({ imgSrc, fallback }: Props) => {
@@ -17,7 +17,7 @@ const DropdownAvatar = ({ imgSrc, fallback }: Props) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src={imgSrc} alt="avatar image" />
+          <AvatarImage alt="avatar image" src={imgSrc} />
           <AvatarFallback>{fallback}</AvatarFallback>
           <span className="sr-only">Toggle user menu</span>
         </Avatar>
