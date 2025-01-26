@@ -1,7 +1,8 @@
-import auth from './libs/firebase'
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 
-function App() {
+import auth from './libs/firebase'
+
+const App = () => {
   const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth)
 
   const handleLogout = () => {
@@ -33,18 +34,14 @@ function App() {
     return <div>Error: {error.message}</div>
   }
 
-  return (
-    <>
-      {user ? (
-        <div>
-          <p>{user.user.email} でログイン中</p>
-          <button onClick={handleLogout}>ログアウト</button>
-          <button onClick={request}>リクエスト！！！</button>
-        </div>
-      ) : (
-        <button onClick={() => signInWithGoogle()}>ログイン</button>
-      )}
-    </>
+  return user ? (
+    <div>
+      <p>{user.user.email} でログイン中</p>
+      <button onClick={handleLogout}>ログアウト</button>
+      <button onClick={request}>リクエスト！！！</button>
+    </div>
+  ) : (
+    <button onClick={() => signInWithGoogle()}>ログイン</button>
   )
 }
 
