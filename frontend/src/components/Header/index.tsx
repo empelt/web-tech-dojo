@@ -1,9 +1,10 @@
-import { Button } from '@/components/ui/button'
 import DropdownAvatar from '../Header/DropdownAvatar'
+
+import { Button } from '@/components/ui/button'
 
 export const Header = () => {
   // TODO: Implement user authentication
-  const loggedIn = true
+  const loggedIn = false
 
   return (
     <div className="flex justify-between px-8 w-screen h-16 items-center drop-shadow-2xl shadow-sm">
@@ -11,8 +12,8 @@ export const Header = () => {
       {loggedIn ? (
         // TODO: Implement user authentication
         <DropdownAvatar
-          imgSrc="https://github.com/shadcn.png"
           fallback="name"
+          imgSrc="https://github.com/shadcn.png"
         />
       ) : (
         <Button>ログイン</Button>
