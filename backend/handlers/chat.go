@@ -3,9 +3,16 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/empelt/web-tech-dojo/models"
 	"github.com/labstack/echo/v4"
 )
+
+type PostQuestionAnswerRequest struct {
+	Answer string `json:"message" validate:"required"`
+}
+
+type PostQuestionAnswerResponse struct {
+	Answer string `json:"message"`
+}
 
 func New(cs ChatService) (*ChatHandler, error) {
 	return &ChatHandler{
@@ -13,8 +20,8 @@ func New(cs ChatService) (*ChatHandler, error) {
 	}, nil
 }
 
-func (h *ChatHandler) PostChatMessage(c echo.Context) error {
-	params := &models.PostChatMessageRequest{}
+func (h *ChatHandler) PostQuestionAnswer(c echo.Context) error {
+	params := &PostQuestionAnswerRequest{}
 	if err := c.Bind(params); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
@@ -23,9 +30,9 @@ func (h *ChatHandler) PostChatMessage(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	res, err := h.chatService.PostChatMessage(c.Request().Context(), params.Message)
+	res, err := h.chatService.PostQuestionAnswer(c.Request().Context(), params.Answer)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
-	return c.JSON(http.StatusOK, models.PostChatMessageResponse{Message: res})
+	return c.JSON(http.StatusOK, PostQuestionAnswerResponse{Answer: res})
 }

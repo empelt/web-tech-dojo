@@ -10,6 +10,7 @@ func New(genaiClient GenaiClient) (*ChatService, error) {
 	}, nil
 }
 
-func (s *ChatService) PostChatMessage(ctx context.Context, message string) (string, error) {
+func (s *ChatService) PostQuestionAnswer(ctx context.Context, message string) (string, error) {
+
 	return s.genaiClient.GenerateContentFromText(ctx, message)
 }
