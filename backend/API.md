@@ -1,14 +1,5 @@
 ---
 title: Web Tech Dojo API
-language_tabs:
-  - shell: Shell
-  - http: HTTP
-  - javascript: JavaScript
-  - ruby: Ruby
-  - python: Python
-  - php: PHP
-  - java: Java
-  - go: Go
 toc_footers: []
 includes: []
 search: true
@@ -21,7 +12,7 @@ generator: "@tarslib/widdershins v4.0.23"
 
 # Web Tech Dojo API
 
-Base URLs:
+Base URLs: $API_GATEWAY_URL
 
 # Authentication
 
