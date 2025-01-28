@@ -10,20 +10,20 @@ import (
 )
 
 const (
-	location  = "us-central1"
+	location  = "asia-northeast1"
 	modelName = "gemini-1.5-flash-001"
 )
 
-func New(ctx context.Context) (*GenaiClient, error) {
+func NewGenaiClient(ctx context.Context) (*GenaiClient, error) {
 	gc, err := genai.NewClient(ctx, os.Getenv("GCP_PROJECT_ID"), location)
 	if err != nil {
 		return nil, err
 	}
 	return &GenaiClient{
-		ctx:         ctx,
 		genaiClient: gc,
 	}, nil
 }
+
 
 func (g *GenaiClient) GenerateContentFromText(ctx context.Context, message string) (string, error) {
 	gemini := g.genaiClient.GenerativeModel(modelName)

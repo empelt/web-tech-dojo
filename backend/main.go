@@ -6,6 +6,7 @@ import (
 
 	"github.com/empelt/web-tech-dojo/handlers"
 	"github.com/empelt/web-tech-dojo/infrastructures"
+	"github.com/empelt/web-tech-dojo/infrastructures/repository"
 	"github.com/empelt/web-tech-dojo/services"
 	"github.com/empelt/web-tech-dojo/validator"
 
@@ -30,21 +31,51 @@ func main() {
 
 	ctx := context.Background()
 
-	genaiClient, err := infrastructures.New(ctx)
+	// Initialize Infrastructures
+	firebaseApp, err := infrastructures.NewFirebaseApp(ctx)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
+	firestoreClient, err := firebaseApp.NewFirestoreClient(ctx)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	genaiClient, err := infrastructures.NewGenaiClient(ctx)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	// Initialize Repository
+	questionRepository, err := repository.NewQuestion(firestoreClient)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	// Initialize Services
 	service, err := services.New(genaiClient)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
+	questionService, err := services.NewQuestionService(questionRepository)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	// Initialize Handlers
 	handler, err := handlers.New(service)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	e.POST("/api/chat", handler.PostChatMessage)
+	questionHandler, err := handlers.NewQuestionHandler(questionService)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	e.POST("/api/chat", handler.PostQuestionAnswer)
+	e.GET("/api/question/:id", questionHandler.GetQuestion)
 	e.Logger.Fatal(e.Start(":" + port))
 }
