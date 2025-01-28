@@ -8,3 +8,9 @@ type QuestionRepository struct {
 	firestoreClient *firestore.Client
 	collectionName  string
 }
+
+type AnswerRepository struct {
+	firestoreClient   *firestore.Client
+	collectionName    string
+	subCollectionName string
+}

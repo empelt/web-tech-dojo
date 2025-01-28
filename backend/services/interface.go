@@ -16,8 +16,15 @@ type QuestionRepository interface {
 	FindQuestion(ctx context.Context, id int) (*models.Question, error)
 }
 
-type ChatService struct {
-	genaiClient GenaiClient
+type AnswerRepository interface {
+	FindAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error)
+	BulkUpsertAnswer(ctx context.Context, answer *models.Answer, newMessages []models.Message) error
+}
+
+type AnswerService struct {
+	genaiClient        GenaiClient
+	questionRepository QuestionRepository
+	answerRepository   AnswerRepository
 }
 
 type QuestionService struct {

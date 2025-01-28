@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/empelt/web-tech-dojo/models"
 	"github.com/labstack/echo/v4"
 )
 
@@ -34,11 +35,11 @@ func (h *QuestionHandler) GetQuestion(c echo.Context) error {
 	}
 
 	q, err := h.questionService.GetQuestion(c.Request().Context(), qid)
+	if err == models.EntityNotFoundError {
+		return echo.NewHTTPError(http.StatusNotFound, err)
+	}
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, errors.New("internal server error"))
-	}
-	if q.Question == nil {
-		return echo.NewHTTPError(http.StatusNotFound, errors.New("question is not found"))
 	}
 	return c.JSON(http.StatusOK, &GetQuestionResponse{
 		Id:        q.Question.Id,

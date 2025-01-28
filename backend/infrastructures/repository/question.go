@@ -9,7 +9,7 @@ import (
 	"github.com/empelt/web-tech-dojo/models"
 )
 
-func NewQuestion(firestoreClient *firestore.Client) (*QuestionRepository, error) {
+func NewQuestionRepository(firestoreClient *firestore.Client) (*QuestionRepository, error) {
 	return &QuestionRepository{
 		firestoreClient: firestoreClient,
 		collectionName:  "questions",
@@ -20,7 +20,7 @@ func (r *QuestionRepository) FindQuestion(ctx context.Context, id int) (*models.
 	itr := r.firestoreClient.Collection(r.collectionName).Where("id", "==", id).Documents(ctx)
 	doc, err := itr.Next()
 	if err == iterator.Done {
-		return nil, nil
+		return nil, models.EntityNotFoundError
 	}
 	if err != nil {
 		return nil, err

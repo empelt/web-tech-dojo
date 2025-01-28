@@ -42,19 +42,29 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
+	authClient, err := firebaseApp.NewFirebaseAuthClient(ctx)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
 	genaiClient, err := infrastructures.NewGenaiClient(ctx)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
 	// Initialize Repository
-	questionRepository, err := repository.NewQuestion(firestoreClient)
+	questionRepository, err := repository.NewQuestionRepository(firestoreClient)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	answerRepository, err := repository.NewAnswerRepository(firestoreClient)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
 	// Initialize Services
-	service, err := services.New(genaiClient)
+	answerService, err := services.NewAnswerService(genaiClient, questionRepository, answerRepository)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -65,7 +75,7 @@ func main() {
 	}
 
 	// Initialize Handlers
-	handler, err := handlers.New(service)
+	handler, err := handlers.NewAnswerHandler(*authClient, answerService)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
