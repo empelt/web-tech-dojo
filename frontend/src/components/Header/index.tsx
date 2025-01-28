@@ -9,9 +9,9 @@ export const Header = () => {
   return (
     <div className="flex justify-between px-8 w-screen h-16 items-center drop-shadow-2xl shadow-sm">
       <button
-        className="font-syuku font-bold text-3xl cursor-pointer"
+        className="cursor-pointer w-60"
         onClick={() => (window.location.href = '/')}>
-        WebTech 道場
+        <img alt="logo" className="w-full h-auto" src="/logo.svg" />
       </button>
       {loggedIn ? (
         // TODO: Implement user authentication
