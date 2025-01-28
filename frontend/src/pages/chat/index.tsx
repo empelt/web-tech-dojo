@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Message } from '@/types/message'
+import { FaArrowUp } from 'react-icons/fa'
 
 const sampleMessages: Message[] = [
   {
@@ -139,9 +140,9 @@ const ChatPage = () => {
   //   }
 
   return (
-    <div className="container mx-auto pt-4">
+    <div className="container mx-auto pt-4 max-w-[800px]">
       <div className="w-full p-2 bg-gray-100 flex justify-start rounded-lg items-center">
-        <div className="p-2 bg-white rounded-lg mr-2">Q23</div>
+        <div className="p-2 bg-white rounded-lg mr-2">Q{id}</div>
         <h1>HTTPとHTTPSの違いはなんですか？</h1>
       </div>
       <div
@@ -175,7 +176,7 @@ const ChatPage = () => {
         <div ref={endOfMessagesRef} />
       </div>
       <div
-        className="container mx-auto fixed bottom-2 left-1/2 transform -translate-x-1/2"
+        className="container mx-auto fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-white pb-2 max-w-[800px]"
         ref={inputRef}>
         <div
           className="flex p-4 shadow-md rounded-lg bg-gray-100 items-end cursor-text"
@@ -192,8 +193,8 @@ const ChatPage = () => {
             placeholder="メッセージを入力"
             value={input}
           />
-          <Button className="ml-2" onClick={handleSend}>
-            送信
+          <Button className="ml-2 rounded-full h-8 w-8" onClick={handleSend}>
+            <FaArrowUp />
           </Button>
         </div>
         <p className="text-sm text-gray-500 text-center mt-2">
