@@ -27,9 +27,58 @@ const questions: Question[] = [
     isBookmarked: false,
     progress: 80,
   },
+  {
+    id: '3',
+    title: 'How to use React Hook Form?',
+    tags: ['react', 'hook', 'form'],
+    isBookmarked: false,
+    progress: 80,
+  },
+  {
+    id: '3',
+    title: 'How to use React Hook Form?',
+    tags: ['react', 'hook', 'form'],
+    isBookmarked: false,
+    progress: 80,
+  },
+  {
+    id: '3',
+    title: 'How to use React Hook Form?',
+    tags: ['react', 'hook', 'form'],
+    isBookmarked: false,
+    progress: 80,
+  },
+  {
+    id: '3',
+    title: 'How to use React Hook Form?',
+    tags: ['react', 'hook', 'form'],
+    isBookmarked: false,
+    progress: 80,
+  },
+  {
+    id: '3',
+    title: 'How to use React Hook Form?',
+    tags: ['react', 'hook', 'form'],
+    isBookmarked: false,
+    progress: 80,
+  },
+  {
+    id: '3',
+    title: 'How to use React Hook Form?',
+    tags: ['react', 'hook', 'form'],
+    isBookmarked: false,
+    progress: 80,
+  },
+  {
+    id: '3',
+    title: 'How to use React Hook Form?',
+    tags: ['react', 'hook', 'form'],
+    isBookmarked: false,
+    progress: 80,
+  },
 ]
 
-const Questions = () => {
+const QuestionsPage = () => {
   const [title, setTitle] = useState<string>('')
   const [selectedTagsValues, setSelectedTagsValues] = useState<Set<string>>(
     new Set(),
@@ -66,4 +115,4 @@ const Questions = () => {
   )
 }
 
-export default Questions
+export default QuestionsPage
