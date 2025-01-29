@@ -11,10 +11,8 @@ export const Header = () => {
 
   return (
     <div className="flex justify-between px-8 w-screen h-16 items-center shadow-sm fixed top-0 left-0 bg-white z-50">
-      <button
-        className="font-syuku font-bold text-3xl cursor-pointer"
-        onClick={() => navigate('/')}>
-        WebTech 道場
+      <button className="cursor-pointer w-60" onClick={() => navigate('/')}>
+        <img alt="logo" className="w-full h-auto" src="/logo.svg" />
       </button>
       {loggedIn ? (
         // TODO: Implement user authentication
