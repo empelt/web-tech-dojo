@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react'
 
+import { FaArrowUp } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { Message } from '@/types/message'
-import { FaArrowUp } from 'react-icons/fa'
 
 const sampleMessages: Message[] = [
   {
@@ -115,6 +116,7 @@ const ChatPage = () => {
   const inputRef = useRef<HTMLDivElement>(null)
   const endOfMessagesRef = useRef<HTMLDivElement>(null)
 
+  const [loading, setLoading] = useState<boolean>(false)
   const [messages, setMessages] = useState<string[]>([])
   const [input, setInput] = useState<string>('')
 
@@ -126,6 +128,10 @@ const ChatPage = () => {
   }
 
   const handleSend = () => {
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false)
+    }, 3000)
     if (input.trim()) {
       setMessages([...messages, input])
       setInput('')
@@ -138,6 +144,38 @@ const ChatPage = () => {
   //       ref.current.scrollIntoView({ behavior: 'smooth' })
   //     }
   //   }
+
+  if (loading) {
+    return (
+      <div className="container mx-auto pt-4 max-w-[800px]">
+        <Skeleton className="h-12 w-full rounded-lg" />
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="mb-4 w-full text-left flex">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="h-10 inline-block ml-4 rounded-xl w-[80%]" />
+          </div>
+          <div className="w-full flex justify-end">
+            <Skeleton className="h-10 w-full rounded-xl max-w-[80%]" />
+          </div>
+        </div>
+        <div className="container mx-auto fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-white pb-2 max-w-[800px]">
+          <div className="flex p-4 shadow-md rounded-lg bg-gray-100 items-end cursor-text">
+            <Textarea
+              className="resize-none max-h-32 border-none shadow-none focus-visible:ring-0"
+              disabled
+              placeholder="メッセージを入力"
+            />
+            <Button className="ml-2 rounded-full h-8 w-8" disabled>
+              <FaArrowUp />
+            </Button>
+          </div>
+          <p className="text-sm text-gray-500 text-center mt-2">
+            AIの回答は必ずしも正しいとは限りません。重要な情報は確認するようにしてください。
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto pt-4 max-w-[800px]">
@@ -152,7 +190,7 @@ const ChatPage = () => {
           if (message.sentByAI) {
             return (
               <div className="mb-2 w-full text-left flex" key={index}>
-                <Avatar className="cursor-pointer">
+                <Avatar>
                   <AvatarImage
                     alt="avatar image"
                     src="https://github.com/shadcn.png"

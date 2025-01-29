@@ -10,13 +10,15 @@ type Props = {
 
 const Layout = ({ showHeader = false, showFooter = false }: Props) => {
   return (
-    <>
-      {showHeader && <Header />}
-      <div className={showHeader ? 'mt-16' : ''}>
-        <Outlet />
+    <div className="flex flex-col justify-between min-h-screen">
+      <div>
+        {showHeader && <Header />}
+        <div className={showHeader ? 'mt-16' : ''}>
+          <Outlet />
+        </div>
       </div>
       {showFooter && <Footer />}
-    </>
+    </div>
   )
 }
 

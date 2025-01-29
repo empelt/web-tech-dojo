@@ -17,6 +17,7 @@ type Props = {
     setTitle: React.Dispatch<React.SetStateAction<string>>
     title: string
   }
+  onClickSearch: (title: string) => void
 }
 
 const Toolbar = ({
@@ -30,6 +31,7 @@ const Toolbar = ({
     setSelectedBookmarkValues,
     setSelectedProgressValues,
   },
+  onClickSearch,
 }: Props) => {
   const isFiltered =
     selectedTagsValues.size > 0 ||
@@ -45,7 +47,9 @@ const Toolbar = ({
           placeholder="Filter questions..."
           value={title}
         />
-        <Button type="submit">search</Button>
+        <Button onClick={() => onClickSearch(title)} type="submit">
+          search
+        </Button>
       </div>
       <div className="flex items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
