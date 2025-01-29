@@ -5,23 +5,37 @@ import (
 	"net/http"
 	"strconv"
 
-	"firebase.google.com/go/auth"
 	"github.com/labstack/echo/v4"
 )
 
-type PostQuestionAnswerRequest struct {
-	Answer string `json:"message" validate:"required"`
-}
-
-type PostQuestionAnswerResponse struct {
-	Answer string `json:"message"`
-}
-
-func NewAnswerHandler(authClient auth.Client, cs AnswerService) (*AnswerHandler, error) {
+func NewAnswerHandler(as AuthService, cs AnswerService) (*AnswerHandler, error) {
 	return &AnswerHandler{
-		authClient:    &authClient,
+		authService:   as,
 		answerService: cs,
 	}, nil
+}
+
+func (h *AnswerHandler) GetPreviousAnswer(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, errors.New("id is required"))
+	}
+	qid, err := strconv.Atoi(id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, errors.New("type error: id"))
+	}
+
+	idToken := echo.Context.Request(c).Header.Get("Authorization")
+	uid, err := h.authService.AuthorizeAsUser(c.Request().Context(), idToken)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusForbidden, err)
+	}
+
+	a, err := h.answerService.GetPreviousAnswer(c.Request().Context(), uid, qid)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, BuildGetPreviousAnswerReponse(a))
 }
 
 func (h *AnswerHandler) PostQuestionAnswer(c echo.Context) error {
@@ -44,12 +58,12 @@ func (h *AnswerHandler) PostQuestionAnswer(c echo.Context) error {
 	}
 
 	idToken := echo.Context.Request(c).Header.Get("Authorization")
-	token, err := h.authClient.VerifyIDToken(c.Request().Context(), idToken)
+	uid, err := h.authService.AuthorizeAsUser(c.Request().Context(), idToken)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusForbidden, err)
 	}
 
-	res, err := h.answerService.PostQuestionAnswer(c.Request().Context(), token.UID, qid, params.Answer)
+	res, err := h.answerService.PostQuestionAnswer(c.Request().Context(), uid, qid, params.Answer)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}

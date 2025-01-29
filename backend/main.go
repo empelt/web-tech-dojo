@@ -64,6 +64,11 @@ func main() {
 	}
 
 	// Initialize Services
+	authService, err := services.NewAuthService(*authClient)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
 	answerService, err := services.NewAnswerService(genaiClient, questionRepository, answerRepository)
 	if err != nil {
 		e.Logger.Fatal(err)
@@ -75,7 +80,7 @@ func main() {
 	}
 
 	// Initialize Handlers
-	handler, err := handlers.NewAnswerHandler(*authClient, answerService)
+	handler, err := handlers.NewAnswerHandler(authService, answerService)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}

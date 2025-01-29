@@ -21,14 +21,8 @@ func NewAnswerService(genaiClient GenaiClient, questionRepository QuestionReposi
 	}, nil
 }
 
-func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid int, message string) (*PostQuestionAnswerResponse, error) {
-	// 1. 問題を取得
-	q, err := s.questionRepository.FindQuestion(ctx, qid)
-	if err != nil {
-		return nil, err
-	}
-
-	// 2. 既存の解答データを取得
+func (s *AnswerService) GetPreviousAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error) {
+	// 1. 既存の解答データを取得
 	a, err := s.answerRepository.FindAnswer(ctx, uid, qid)
 	if err != nil {
 		if err == models.EntityNotFoundError {
@@ -44,6 +38,22 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 		} else {
 			return nil, err
 		}
+	}
+
+	return a, nil
+}
+
+func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid int, message string) (*PostQuestionAnswerResponse, error) {
+	// 1. 問題を取得
+	q, err := s.questionRepository.FindQuestion(ctx, qid)
+	if err != nil {
+		return nil, err
+	}
+
+	// 2. 既存の解答データを取得
+	a, err := s.GetPreviousAnswer(ctx, uid, qid)
+	if err != nil {
+		return nil, err
 	}
 
 	// 3. AIへ送るプロンプトを作成

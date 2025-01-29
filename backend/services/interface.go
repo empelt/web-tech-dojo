@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 
+	"firebase.google.com/go/auth"
 	"github.com/empelt/web-tech-dojo/models"
 )
 
@@ -19,6 +20,10 @@ type QuestionRepository interface {
 type AnswerRepository interface {
 	FindAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error)
 	BulkUpsertAnswer(ctx context.Context, answer *models.Answer, newMessages []models.Message) error
+}
+
+type AuthService struct {
+	firebaseAuthClient auth.Client
 }
 
 type AnswerService struct {
