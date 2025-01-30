@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - t2/create-env-in-workflow
+      - main
     paths-ignore:
       - "**.md"
 
