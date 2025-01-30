@@ -50,6 +50,19 @@ frontend
 | VITE_FIREBASE_MEASUREMENT_ID      | Google Analyticsの計測ID                      |              |                |
 | VITE_BACKEND_URL                  | アプリケーションがアクセスするバックエンドURL |              |                |
 
+環境変数をbase64エンコードしてsecretsに持たせるときのコマンド（改行を消してsecretsに登録）
+
+```
+# windows
+知らん
+
+# ubuntu
+$ base64 -i .env.local | xsel --clipboard --input
+
+# mac
+$ base64 -i .env.local | pbcopy
+```
+
 ## 開発方法
 
 UIテンプレートとして [shadcn/ui](https://ui.shadcn.com/) を利用しています。
