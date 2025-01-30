@@ -66,8 +66,7 @@ jobs:
 
       - name: Decode Firebase Secrets
         run: echo ${{ secrets.FRONTEND_FIREBASE_SECRETS }} | base64 -d > .env
-        env:
-          FRONTEND_FIREBASE_SECRETS: ${{ secrets.FRONTEND_FIREBASE_SECRETS }}
+
       - name: Build
         run: npm run build
 
