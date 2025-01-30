@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
   changes:
@@ -29,7 +29,7 @@ jobs:
               - 'frontend/src/**'
             backend:
               - 'backend/**'
-      
+
   deploy_hosting:
     name: Deploy Hosting
     needs:
@@ -64,12 +64,15 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT_FOR_HOSTING }}
           create_credentials_file: true
 
+      - name: Decode Firebase Secrets
+        run: echo ${{ secrets.FRONTEND_FIREBASE_SECRETS }} | base64 -d > ./.env
+
       - name: Build
         run: npm run build
 
       - name: Deploy to Hosting
         run: firebase deploy --only hosting
-  
+
   deploy_cloud_run:
     name: Deploy Cloud Run
     needs:
@@ -97,7 +100,7 @@ jobs:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT_FOR_CLOUD_RUN }}
           create_credentials_file: true
-      
+
       - name: Configure Docker
         run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
 
