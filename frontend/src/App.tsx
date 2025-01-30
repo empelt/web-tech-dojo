@@ -22,7 +22,7 @@ const App = () => {
         console.log(res)
       })
       .catch((error) => {
-        console.error('リクエストエラーあい:', error)
+        console.error('リクエストエラーあいう:', error)
       })
   }
 
