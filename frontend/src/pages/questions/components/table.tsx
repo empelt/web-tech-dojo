@@ -46,7 +46,7 @@ const QuestionsTable = ({ questions, onBookmark, loading }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {questions.map((question, index) => (
+            {[...Array(10)].map((_, index) => (
               <TableRow key={index}>
                 <TableCell className="text-center">
                   <Skeleton className="w-6 h-6 mx-auto" />
