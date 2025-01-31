@@ -1,9 +1,11 @@
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 
+import { useAuth } from './hooks/useAuth'
 import auth from './libs/firebase'
 
 const App = () => {
-  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth)
+  const { user } = useAuth()
+  const [signInWithGoogle, , loading, error] = useSignInWithGoogle(auth)
 
   const handleLogout = () => {
     auth.signOut()
@@ -11,7 +13,7 @@ const App = () => {
   }
 
   const request = async () => {
-    const token = await user?.user.getIdToken()
+    const token = await user?.getIdToken()
     fetch(import.meta.env.VITE_BACKEND_URL, {
       method: 'GET',
       headers: {
@@ -36,7 +38,7 @@ const App = () => {
 
   return user ? (
     <div>
-      <p>{user.user.email} でログイン中</p>
+      <p>{user.email} でログイン中</p>
       <button onClick={handleLogout}>ログアウト</button>
       <button onClick={request}>リクエスト！！！</button>
     </div>
