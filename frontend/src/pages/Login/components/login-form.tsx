@@ -9,7 +9,10 @@ import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 
 type LoginFormProps = React.ComponentPropsWithoutRef<'div'> & {
-  loginFunction: (email: string, password: string) => void
+  signInWithEmailAndPassword: (
+    email: string,
+    password: string,
+  ) => Promise<UserCredential | undefined>
   signInWithGoogle: (
     scopes?: string[],
     customOAuthParameters?: CustomParameters,
@@ -19,7 +22,7 @@ type LoginFormProps = React.ComponentPropsWithoutRef<'div'> & {
 
 export const LoginForm = ({
   className,
-  loginFunction,
+  signInWithEmailAndPassword,
   signInWithGoogle,
   switchToSignup,
   ...props
@@ -29,62 +32,60 @@ export const LoginForm = ({
   const [password, setPassword] = useState('')
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <form>
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-center gap-2">
+      {/* <form onSubmit={() => signInWithEmailAndPassword(email, password)}> */}
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col items-center gap-2">
+          <a className="flex flex-col items-center gap-2 font-medium" href="#">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md">
+              <GalleryVerticalEnd className="size-6" />
+            </div>
+            <span className="sr-only">Acme Inc.</span>
+          </a>
+          <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
+          <div className="text-center text-sm">
+            Don&apos;t have an account?{' '}
             <a
-              className="flex flex-col items-center gap-2 font-medium"
-              href="#">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md">
-                <GalleryVerticalEnd className="size-6" />
-              </div>
-              <span className="sr-only">Acme Inc.</span>
+              className="underline underline-offset-4"
+              href="#"
+              onClick={switchToSignup}>
+              Sign up
             </a>
-            <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
-            <div className="text-center text-sm">
-              Don&apos;t have an account?{' '}
-              <a
-                className="underline underline-offset-4"
-                href="#"
-                onClick={switchToSignup}>
-                Sign up
-              </a>
-            </div>
-          </div>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="m@example.com"
-                required
-                type="email"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                type="password"
-              />
-            </div>
-            <Button
-              className="w-full"
-              onClick={() => loginFunction(email, password)}
-              type="submit">
-              Login
-            </Button>
-          </div>
-          <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-            <span className="relative z-10 bg-background px-2 text-muted-foreground">
-              Or
-            </span>
           </div>
         </div>
-      </form>
+        <div className="flex flex-col gap-6">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="m@example.com"
+              required
+              type="email"
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              type="password"
+            />
+          </div>
+          <Button
+            className="w-full"
+            onClick={() => signInWithEmailAndPassword(email, password)}
+            type="button">
+            Login
+          </Button>
+        </div>
+        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+          <span className="relative z-10 bg-background px-2 text-muted-foreground">
+            Or
+          </span>
+        </div>
+      </div>
+      {/* </form> */}
       <Button
         className="w-full"
         onClick={() => signInWithGoogle()}
