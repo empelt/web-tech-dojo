@@ -1,13 +1,21 @@
 import { useEffect } from 'react'
 
-import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
+import {
+  useCreateUserWithEmailAndPassword,
+  useSignInWithGoogle,
+} from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router'
 
+import { useAuth } from '@/hooks/useAuth'
 import auth from '@/libs/firebase'
 import { SignupForm } from '@/pages/Signup/components/signup-form'
 
 const SignupPage = () => {
-  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth)
+  const { user } = useAuth()
+  const [signInWithGoogle, , googleLoading, googleError] =
+    useSignInWithGoogle(auth)
+  const [createUserWithEmailAndPassword, , emailLoading, emailError] =
+    useCreateUserWithEmailAndPassword(auth)
   const navigate = useNavigate()
   useEffect(() => {
     if (user) {
@@ -19,22 +27,21 @@ const SignupPage = () => {
     console.log('switchToLogin')
     navigate('/login')
   }
-  const signupFunction = (email: string, password: string) => {
-    console.log(email, password)
-  }
-  if (loading) {
+  if (googleLoading || emailLoading) {
     return <div>Loading...</div>
   }
-  if (error) {
-    return <div>Error: {error.message}</div>
+  if (googleError || emailError) {
+    return <div>Error: {googleError?.message || emailError?.message}</div>
   }
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
       <div className="w-full max-w-sm">
         <SignupForm
+          createUserWithEmailAndPassword={(email, password) =>
+            createUserWithEmailAndPassword(email, password)
+          }
           signInWithGoogle={() => signInWithGoogle()}
-          signupFunction={signupFunction}
           switchToLogin={switchToLogin}
         />
       </div>
