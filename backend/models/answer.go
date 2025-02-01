@@ -9,16 +9,14 @@ import (
 // userId:       ユーザId(Firebase auth Id)
 // questionId:   問題番号(Question.Id)
 // progress:     この問題の現在の最高得点
-// isBookmarked: お気に入りフラグ
 // Messages:     メッセージ
 // updatedAt:    最終更新日時
 type Answer struct {
-	UserId       string
-	QuestionId   int
-	Progress     int
-	IsBookmarked bool
-	Messages     []Message
-	UpdatedAt    time.Time
+	UserId     string
+	QuestionId int
+	Progress   int
+	Messages   []Message
+	UpdatedAt  time.Time
 }
 
 // メッセージ

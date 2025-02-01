@@ -18,9 +18,8 @@ func BuildGetPreviousAnswerReponse(a *models.Answer) GetPreviousAnswerResponse {
 		mss = append(mss, buildMessage(a.Messages[i]))
 	}
 	return GetPreviousAnswerResponse{
-		Progress:     a.Progress,
-		IsBookmarked: a.IsBookmarked,
-		Messages:     mss,
+		Progress: a.Progress,
+		Messages: mss,
 	}
 }
 
@@ -54,4 +53,8 @@ type PostQuestionAnswerRequest struct {
 
 type PostQuestionAnswerResponse struct {
 	Answer string `json:"message"`
+}
+
+type GetBookmarkResponse struct {
+	QuestionIds []int `json:"questionIds"`
 }

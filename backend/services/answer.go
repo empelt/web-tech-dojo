@@ -28,12 +28,11 @@ func (s *AnswerService) GetPreviousAnswer(ctx context.Context, uid string, qid i
 		if err == models.EntityNotFoundError {
 			// 既存の解答データがない場合は空データを作成
 			a = &models.Answer{
-				UserId:       uid,
-				QuestionId:   qid,
-				Progress:     0,
-				IsBookmarked: false,
-				Messages:     []models.Message{},
-				UpdatedAt:    time.Now(),
+				UserId:     uid,
+				QuestionId: qid,
+				Progress:   0,
+				Messages:   []models.Message{},
+				UpdatedAt:  time.Now(),
 			}
 		} else {
 			return nil, err
@@ -67,12 +66,11 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 
 	// 5. 解答と返信を保存
 	id, err := s.answerRepository.BulkUpsertAnswer(ctx, &models.Answer{
-		UserId:       a.UserId,
-		QuestionId:   a.QuestionId,
-		Progress:     a.Progress,
-		IsBookmarked: a.IsBookmarked,
-		Messages:     []models.Message{},
-		UpdatedAt:    time.Now(),
+		UserId:     a.UserId,
+		QuestionId: a.QuestionId,
+		Progress:   a.Progress,
+		Messages:   []models.Message{},
+		UpdatedAt:  time.Now(),
 	}, []models.Message{
 		models.CreateMessage(message, true),
 		models.CreateMessage(reply, false),

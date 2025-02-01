@@ -23,6 +23,12 @@ type QuestionService interface {
 	GetAllQuestions(ctx context.Context) ([]models.Question, error)
 }
 
+type BookmarkService interface {
+	GetBookmark(ctx context.Context, uid string) (*models.Bookmark, error)
+	AddBookmark(ctx context.Context, uid string, qid int) error
+	RemoveBookmark(ctx context.Context, uid string, qid int) error
+}
+
 type AnswerHandler struct {
 	authService   AuthService
 	answerService AnswerService
@@ -30,4 +36,9 @@ type AnswerHandler struct {
 
 type QuestionHandler struct {
 	questionService QuestionService
+}
+
+type BookmarkHandler struct {
+	authService     AuthService
+	bookmarkService BookmarkService
 }

@@ -23,7 +23,7 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE"},
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAuthorization},
 		AllowCredentials: true,
 	}))
@@ -63,6 +63,11 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
+	bookmarkRepository, err := repository.NewBookmarkRepository(firestore)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
 	// Initialize Services
 	authService, err := services.NewAuthService(firebaseAuth)
 	if err != nil {
@@ -79,6 +84,11 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
+	bookmarkService, err := services.NewBookmarkService(bookmarkRepository)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
 	// Initialize Handlers
 	answerHandler, err := handlers.NewAnswerHandler(authService, answerService)
 	if err != nil {
@@ -90,9 +100,17 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
+	bookmarkHandler, err := handlers.NewBookmarkHandler(authService, bookmarkService)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
 	e.GET("/api/question", questionHandler.GetAllQuestions)
 	e.GET("/api/question/:id", questionHandler.GetQuestion)
 	e.GET("/api/question/:id/answer", answerHandler.GetPreviousAnswer)
 	e.POST("/api/question/:id/answer", answerHandler.PostQuestionAnswer)
+	e.GET("/api/bookmark", bookmarkHandler.GetBookmark)
+	e.POST("/api/bookmark/question/:id", bookmarkHandler.AddBookmark)
+	e.DELETE("/api/bookmark/question/:id", bookmarkHandler.RemoveBookmark)
 	e.Logger.Fatal(e.Start(":" + port))
 }

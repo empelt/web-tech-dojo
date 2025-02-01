@@ -23,6 +23,11 @@ type AnswerRepository interface {
 	BulkUpsertAnswer(ctx context.Context, answer *models.Answer, newMessages []models.Message) (string, error)
 }
 
+type BookmarkRepository interface {
+	GetBookmark(ctx context.Context, uid string) (*models.Bookmark, error)
+	BulkUpsertBookmark(ctx context.Context, uid string, b *models.Bookmark) (string, error)
+}
+
 type AuthService struct {
 	firebaseAuth *infrastructures.FirebaseAuth
 }
@@ -35,4 +40,8 @@ type AnswerService struct {
 
 type QuestionService struct {
 	questionRepository QuestionRepository
+}
+
+type BookmarkService struct {
+	bookmarkRepository BookmarkRepository
 }
