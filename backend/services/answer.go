@@ -65,7 +65,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	}
 
 	// 5. 解答と返信を保存
-	id, err := s.answerRepository.BulkUpsertAnswer(ctx, &models.Answer{
+	if _, err := s.answerRepository.BulkUpsertAnswer(ctx, &models.Answer{
 		UserId:     a.UserId,
 		QuestionId: a.QuestionId,
 		Progress:   a.Progress,
@@ -74,11 +74,46 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	}, []models.Message{
 		models.CreateMessage(message, true),
 		models.CreateMessage(reply, false),
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
-	fmt.Println("Answer saved. id:", id)
+
+	u, err := s.userRepository.GetUser(ctx, uid)
+	if err != nil {
+		if err == models.EntityNotFoundError {
+			u = &models.User{
+				UserId:      uid,
+				QuestionIds: []int{},
+				Progresses:  []models.Progress{},
+			}
+		} else {
+			return nil, err
+		}
+	}
+	hasProgress := false
+	needUpsert := true
+	for _, p := range u.Progresses {
+		if p.QuestionId == qid {
+			if p.Progress < 100 { // TODO: fix
+				p.Progress = 50 // TODO: fix
+			} else {
+				needUpsert = false
+			}
+			hasProgress = true
+			break
+		}
+	}
+	if !hasProgress {
+		u.Progresses = append(u.Progresses, models.Progress{
+			QuestionId: qid,
+			Progress:   50, //TODO: fix
+		})
+	}
+	if needUpsert {
+		if _, err := s.userRepository.BulkUpsertUser(ctx, uid, u); err != nil {
+			return nil, err
+		}
+	}
 
 	return &PostQuestionAnswerResponse{
 		Message: reply,

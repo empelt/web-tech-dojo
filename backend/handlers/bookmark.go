@@ -8,29 +8,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func NewBookmarkHandler(as AuthService, bs BookmarkService) (*BookmarkHandler, error) {
+func NewBookmarkHandler(as AuthService, bs UserService) (*BookmarkHandler, error) {
 	return &BookmarkHandler{
 		authService:     as,
 		bookmarkService: bs,
 	}, nil
-}
-
-func (h *BookmarkHandler) GetBookmark(c echo.Context) error {
-	uid, err := h.authService.AuthorizeAsUser(c.Request().Context(), getIdToken(c))
-	if err != nil {
-		return echo.NewHTTPError(http.StatusForbidden, err)
-	}
-	b, err := h.bookmarkService.GetBookmark(c.Request().Context(), uid)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err)
-	}
-	qids := b.QuestionIds
-	if qids == nil {
-		qids = []int{}
-	}
-	return c.JSON(http.StatusOK, GetBookmarkResponse{
-		QuestionIds: qids,
-	})
 }
 
 func (h *BookmarkHandler) AddBookmark(c echo.Context) error {

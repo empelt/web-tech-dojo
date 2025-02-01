@@ -8,14 +8,14 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-func NewBookmarkRepository(firestore *infrastructures.Firestore) (*BookmarkRepository, error) {
-	return &BookmarkRepository{
+func NewUserRepository(firestore *infrastructures.Firestore) (*UserRepository, error) {
+	return &UserRepository{
 		firestore:      firestore,
-		collectionName: "bookmarks",
+		collectionName: "users",
 	}, nil
 }
 
-func (r *BookmarkRepository) GetBookmark(ctx context.Context, uid string) (*models.Bookmark, error) {
+func (r *UserRepository) GetUser(ctx context.Context, uid string) (*models.User, error) {
 	itr := r.firestore.Client.Collection(r.collectionName).Where("userId", "==", uid).Documents(ctx)
 	doc, err := itr.Next()
 
@@ -26,19 +26,19 @@ func (r *BookmarkRepository) GetBookmark(ctx context.Context, uid string) (*mode
 		return nil, err
 	}
 
-	b := models.Bookmark{}
+	b := models.User{}
 	if err := doc.DataTo(&b); err != nil {
 		return nil, err
 	}
 	return &b, nil
 }
 
-func (r *BookmarkRepository) BulkUpsertBookmark(ctx context.Context, uid string, b *models.Bookmark) (string, error) {
+func (r *UserRepository) BulkUpsertUser(ctx context.Context, uid string, u *models.User) (string, error) {
 	itr := r.firestore.Client.Collection(r.collectionName).Where("userId", "==", uid).Documents(ctx)
 	doc, err := itr.Next()
 	if err == iterator.Done {
 		// 新規作成するケース
-		newDoc, _, err := r.firestore.Client.Collection(r.collectionName).Add(ctx, b)
+		newDoc, _, err := r.firestore.Client.Collection(r.collectionName).Add(ctx, u)
 		if err != nil {
 			return "", err
 		}
@@ -49,7 +49,7 @@ func (r *BookmarkRepository) BulkUpsertBookmark(ctx context.Context, uid string,
 	}
 
 	// 既存のお気に入りデータがあるケース
-	if _, err := doc.Ref.Set(ctx, b); err != nil {
+	if _, err := doc.Ref.Set(ctx, u); err != nil {
 		return "", err
 	}
 	return doc.Ref.ID, nil

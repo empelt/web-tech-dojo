@@ -63,7 +63,7 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	bookmarkRepository, err := repository.NewBookmarkRepository(firestore)
+	userRepository, err := repository.NewUserRepository(firestore)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -74,17 +74,17 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
+	userService, err := services.NewUserService(userRepository)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
 	answerService, err := services.NewAnswerService(genai, questionRepository, answerRepository)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	questionService, err := services.NewQuestionService(questionRepository)
-	if err != nil {
-		e.Logger.Fatal(err)
-	}
-
-	bookmarkService, err := services.NewBookmarkService(bookmarkRepository)
+	questionService, err := services.NewQuestionService(questionRepository, userService)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -95,12 +95,12 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	questionHandler, err := handlers.NewQuestionHandler(questionService)
+	questionHandler, err := handlers.NewQuestionHandler(authService, questionService)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	bookmarkHandler, err := handlers.NewBookmarkHandler(authService, bookmarkService)
+	bookmarkHandler, err := handlers.NewBookmarkHandler(authService, userService)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -109,7 +109,6 @@ func main() {
 	e.GET("/api/question/:id", questionHandler.GetQuestion)
 	e.GET("/api/question/:id/answer", answerHandler.GetPreviousAnswer)
 	e.POST("/api/question/:id/answer", answerHandler.PostQuestionAnswer)
-	e.GET("/api/bookmark", bookmarkHandler.GetBookmark)
 	e.POST("/api/bookmark/question/:id", bookmarkHandler.AddBookmark)
 	e.DELETE("/api/bookmark/question/:id", bookmarkHandler.RemoveBookmark)
 	e.Logger.Fatal(e.Start(":" + port))

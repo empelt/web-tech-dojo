@@ -19,12 +19,11 @@ type AnswerService interface {
 }
 
 type QuestionService interface {
-	GetQuestion(ctx context.Context, id int) (*services.GetQuestionResponse, error)
-	GetAllQuestions(ctx context.Context) ([]models.Question, error)
+	GetQuestion(ctx context.Context, uid string, qid int) (*services.GetQuestionResponse, error)
+	GetAllQuestions(ctx context.Context, uid string) ([]services.QuestionSummary, error)
 }
 
-type BookmarkService interface {
-	GetBookmark(ctx context.Context, uid string) (*models.Bookmark, error)
+type UserService interface {
 	AddBookmark(ctx context.Context, uid string, qid int) error
 	RemoveBookmark(ctx context.Context, uid string, qid int) error
 }
@@ -35,10 +34,11 @@ type AnswerHandler struct {
 }
 
 type QuestionHandler struct {
+	authService     AuthService
 	questionService QuestionService
 }
 
 type BookmarkHandler struct {
 	authService     AuthService
-	bookmarkService BookmarkService
+	bookmarkService UserService
 }

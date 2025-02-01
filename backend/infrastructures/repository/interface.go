@@ -15,7 +15,7 @@ type AnswerRepository struct {
 	subCollectionName string
 }
 
-type BookmarkRepository struct {
+type UserRepository struct {
 	firestore      *infrastructures.Firestore
 	collectionName string
 }
