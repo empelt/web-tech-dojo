@@ -4,34 +4,36 @@ import (
 	"context"
 	"os"
 
-	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
-	"firebase.google.com/go/auth"
 )
 
-func NewFirebaseApp(ctx context.Context) (*FirebaseApp, error) {
+func NewFirebaseApp(ctx context.Context) (*Firebase, error) {
 	conf := &firebase.Config{ProjectID: os.Getenv("GCP_PROJECT_ID")}
 	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		return nil, err
 	}
-	return &FirebaseApp{
-		firebaseApp: app,
+	return &Firebase{
+		app: app,
 	}, nil
 }
 
-func (f *FirebaseApp) NewFirestoreClient(ctx context.Context) (*firestore.Client, error) {
-	client, err := f.firebaseApp.Firestore(ctx)
+func NewFirestore(ctx context.Context, f *Firebase) (*Firestore, error) {
+	client, err := f.app.Firestore(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return client, nil
+	return &Firestore{
+		Client: client,
+	}, nil
 }
 
-func (f *FirebaseApp) NewFirebaseAuthClient(ctx context.Context) (*auth.Client, error) {
-	client, err := f.firebaseApp.Auth(ctx)
+func NewFirebaseAuth(ctx context.Context, f *Firebase) (*FirebaseAuth, error) {
+	client, err := f.app.Auth(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return client, nil
+	return &FirebaseAuth{
+		Client: client,
+	}, nil
 }

@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
 
+	"github.com/empelt/web-tech-dojo/infrastructures"
 	"github.com/empelt/web-tech-dojo/models"
 )
 
@@ -18,9 +18,9 @@ type AnswerDocument struct {
 	UpdatedAt    time.Time `firestore:"updatedAt,omitempty"`
 }
 
-func NewAnswerRepository(firestoreClient *firestore.Client) (*AnswerRepository, error) {
+func NewAnswerRepository(firestore *infrastructures.Firestore) (*AnswerRepository, error) {
 	return &AnswerRepository{
-		firestoreClient:   firestoreClient,
+		firestore:         firestore,
 		collectionName:    "answers",
 		subCollectionName: "messages",
 	}, nil
@@ -28,7 +28,7 @@ func NewAnswerRepository(firestoreClient *firestore.Client) (*AnswerRepository, 
 
 func (r *AnswerRepository) FindAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error) {
 	// 1. Answerを取得
-	itr := r.firestoreClient.Collection(r.collectionName).
+	itr := r.firestore.Client.Collection(r.collectionName).
 		Where("userId", "==", uid).
 		Where("questionId", "==", qid).
 		Documents(ctx)
@@ -77,14 +77,14 @@ func (r *AnswerRepository) BulkUpsertAnswer(ctx context.Context, a *models.Answe
 	}
 
 	// 1. 既存データ存在確認
-	itr := r.firestoreClient.Collection(r.collectionName).
+	itr := r.firestore.Client.Collection(r.collectionName).
 		Where("userId", "==", a.UserId).
 		Where("questionId", "==", a.QuestionId).
 		Documents(ctx)
 	doc, err := itr.Next()
 	if err == iterator.Done {
 		// 2.1 新規作成するケース
-		newDoc, _, err := r.firestoreClient.Collection(r.collectionName).Add(ctx, aDoc)
+		newDoc, _, err := r.firestore.Client.Collection(r.collectionName).Add(ctx, aDoc)
 		if err != nil {
 			return "", err
 		}

@@ -37,39 +37,39 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	firestoreClient, err := firebaseApp.NewFirestoreClient(ctx)
+	firestore, err := infrastructures.NewFirestore(ctx, firebaseApp)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	authClient, err := firebaseApp.NewFirebaseAuthClient(ctx)
+	firebaseAuth, err := infrastructures.NewFirebaseAuth(ctx, firebaseApp)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	genaiClient, err := infrastructures.NewGenaiClient(ctx)
+	genai, err := infrastructures.NewGenai(ctx)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
 	// Initialize Repository
-	questionRepository, err := repository.NewQuestionRepository(firestoreClient)
+	questionRepository, err := repository.NewQuestionRepository(firestore)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	answerRepository, err := repository.NewAnswerRepository(firestoreClient)
+	answerRepository, err := repository.NewAnswerRepository(firestore)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
 	// Initialize Services
-	authService, err := services.NewAuthService(*authClient)
+	authService, err := services.NewAuthService(firebaseAuth)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	answerService, err := services.NewAnswerService(genaiClient, questionRepository, answerRepository)
+	answerService, err := services.NewAnswerService(genai, questionRepository, answerRepository)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}

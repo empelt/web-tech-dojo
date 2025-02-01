@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 
-	"firebase.google.com/go/auth"
+	"github.com/empelt/web-tech-dojo/infrastructures"
 	"github.com/empelt/web-tech-dojo/models"
 )
 
@@ -23,7 +23,7 @@ type AnswerRepository interface {
 }
 
 type AuthService struct {
-	firebaseAuthClient auth.Client
+	firebaseAuth *infrastructures.FirebaseAuth
 }
 
 type AnswerService struct {

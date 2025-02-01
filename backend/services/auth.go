@@ -4,19 +4,19 @@ import (
 	"context"
 	"log"
 
-	"firebase.google.com/go/auth"
+	"github.com/empelt/web-tech-dojo/infrastructures"
 	"github.com/empelt/web-tech-dojo/models"
 )
 
-func NewAuthService(firebaseAuthClient auth.Client) (*AuthService, error) {
+func NewAuthService(firebaseAuth *infrastructures.FirebaseAuth) (*AuthService, error) {
 	return &AuthService{
-		firebaseAuthClient: firebaseAuthClient,
+		firebaseAuth: firebaseAuth,
 	}, nil
 }
 
 func (s *AuthService) AuthorizeAsUser(ctx context.Context, idToken string) (string, error) {
 	// 1. UIDの取得
-	token, err := s.firebaseAuthClient.VerifyIDToken(ctx, idToken)
+	token, err := s.firebaseAuth.Client.VerifyIDToken(ctx, idToken)
 	if err != nil {
 		log.Println(err.Error())
 		return "", models.EntityNotFoundError

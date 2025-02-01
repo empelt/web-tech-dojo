@@ -9,18 +9,18 @@ import (
 	"firebase.google.com/go/auth"
 )
 
-type FirebaseApp struct {
-	firebaseApp *firebase.App
+type Firebase struct {
+	app *firebase.App
 }
 
-type FirestoreClient struct {
-	firestoreClient *firestore.Client
+type Firestore struct {
+	Client *firestore.Client
 }
 
-type FirebaseAuthClient struct {
-	firebaseAuthClient *auth.Client
+type FirebaseAuth struct {
+	Client *auth.Client
 }
 
-type GenaiClient struct {
-	genaiClient *genai.Client
+type Genai struct {
+	Client *genai.Client
 }
