@@ -5,16 +5,17 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 
 import App from './App'
 import { Toaster } from './components/ui/toaster'
+import { AuthProvider } from './hooks/useAuth'
 import ChatPage from './pages/chat'
 import ContactPage from './pages/contact'
+import LoginPage from './pages/Login'
 import PrivacyPage from './pages/privacy'
 import QuestionsPage from './pages/questions'
+import SignupPage from './pages/Signup'
 import TermsPage from './pages/terms'
 
 import './index.css'
-import { AuthProvider } from './hooks/useAuth'
-import LoginPage from './pages/Login'
-import SignupPage from './pages/Signup'
+
 import Layout from '@/components/Layout'
 
 const root = document.getElementById('root')

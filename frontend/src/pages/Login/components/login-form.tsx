@@ -2,12 +2,12 @@ import { useState } from 'react'
 
 import { CustomParameters, UserCredential } from 'firebase/auth'
 import { GalleryVerticalEnd } from 'lucide-react'
+import { Link } from 'react-router'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import { Link } from 'react-router'
 
 type LoginFormProps = React.ComponentPropsWithoutRef<'div'> & {
   signInWithEmailAndPassword: (
