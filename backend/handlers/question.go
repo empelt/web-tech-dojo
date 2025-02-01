@@ -44,12 +44,8 @@ func (h *QuestionHandler) GetQuestion(c echo.Context) error {
 	return c.JSON(http.StatusOK, q)
 }
 
-func (h *QuestionHandler) SearchQuestions(c echo.Context) error {
-	request := SearchQuestionsRequest{}
-	if err := c.Bind(&request); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-	qs, err := h.questionService.SearchQuestions(c.Request().Context(), request.Keyword, request.Tags)
+func (h *QuestionHandler) GetAllQuestions(c echo.Context) error {
+	qs, err := h.questionService.GetAllQuestions(c.Request().Context())
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}

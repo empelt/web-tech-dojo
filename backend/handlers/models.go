@@ -55,8 +55,3 @@ type PostQuestionAnswerRequest struct {
 type PostQuestionAnswerResponse struct {
 	Answer string `json:"message"`
 }
-
-type SearchQuestionsRequest struct {
-	Keyword string   `query:"keyword"`
-	Tags    []string `query:"tags"`
-}

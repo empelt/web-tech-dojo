@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"strings"
 
 	"github.com/empelt/web-tech-dojo/models"
 )
@@ -27,20 +26,10 @@ func (s *QuestionService) GetQuestion(ctx context.Context, id int) (*GetQuestion
 	}, nil
 }
 
-func (s *QuestionService) SearchQuestions(ctx context.Context, keyword string, tags []string) ([]models.Question, error) {
-	qs, err := s.questionRepository.FilterQuestionsByTags(ctx, tags)
+func (s *QuestionService) GetAllQuestions(ctx context.Context) ([]models.Question, error) {
+	qs, err := s.questionRepository.GetAllQuestions(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if keyword != "" {
-		rtv := []models.Question{}
-		for _, q := range qs {
-			if strings.Contains(q.Title, keyword) {
-				rtv = append(rtv, q)
-			}
-		}
-		return rtv, nil
-	} else {
-		return qs, nil
-	}
+	return qs, nil
 }
