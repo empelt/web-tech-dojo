@@ -19,7 +19,7 @@ type QuestionRepository interface {
 
 type AnswerRepository interface {
 	FindAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error)
-	BulkUpsertAnswer(ctx context.Context, answer *models.Answer, newMessages []models.Message) error
+	BulkUpsertAnswer(ctx context.Context, answer *models.Answer, newMessages []models.Message) (string, error)
 }
 
 type AuthService struct {

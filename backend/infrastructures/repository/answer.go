@@ -11,11 +11,11 @@ import (
 )
 
 type AnswerDocument struct {
-	UserId       string    `firestore:"UserId,omitempty"`
-	QuestionId   int       `firestore:"QuestionId,omitempty"`
-	Progress     int       `firestore:"Progress,omitempty"`
-	IsBookmarked bool      `firestore:"ISBookmarked,omitempty"`
-	UpdatedAt    time.Time `firestore:"UpdatedAt,omitempty"`
+	UserId       string    `firestore:"userId,omitempty"`
+	QuestionId   int       `firestore:"questionId,omitempty"`
+	Progress     int       `firestore:"progress,omitempty"`
+	IsBookmarked bool      `firestore:"iSBookmarked,omitempty"`
+	UpdatedAt    time.Time `firestore:"updatedAt,omitempty"`
 }
 
 func NewAnswerRepository(firestoreClient *firestore.Client) (*AnswerRepository, error) {
@@ -50,7 +50,7 @@ func (r *AnswerRepository) FindAnswer(ctx context.Context, uid string, qid int) 
 	if err != nil {
 		return nil, err
 	}
-	var mss []models.Message
+	mss := []models.Message{}
 	for i := 0; i < len(mSnapshots); i++ {
 		var m models.Message
 		mSnapshots[i].DataTo(&m)
@@ -67,7 +67,7 @@ func (r *AnswerRepository) FindAnswer(ctx context.Context, uid string, qid int) 
 	}, nil
 }
 
-func (r *AnswerRepository) BulkUpsertAnswer(ctx context.Context, a *models.Answer, mss []models.Message) error {
+func (r *AnswerRepository) BulkUpsertAnswer(ctx context.Context, a *models.Answer, mss []models.Message) (string, error) {
 	aDoc := AnswerDocument{
 		UserId:       a.UserId,
 		QuestionId:   a.QuestionId,
@@ -83,30 +83,30 @@ func (r *AnswerRepository) BulkUpsertAnswer(ctx context.Context, a *models.Answe
 		Documents(ctx)
 	doc, err := itr.Next()
 	if err == iterator.Done {
-		// 2.1 既存データがあるケース
-		doc.Ref.Set(ctx, aDoc)
+		// 2.1 新規作成するケース
+		newDoc, _, err := r.firestoreClient.Collection(r.collectionName).Add(ctx, aDoc)
+		if err != nil {
+			return "", err
+		}
 		for i := 0; i < len(mss); i++ {
-			_, _, err := doc.Ref.Collection(r.subCollectionName).Add(ctx, mss[i])
+			_, _, err := newDoc.Collection(r.subCollectionName).Add(ctx, mss[i])
 			if err != nil {
-				return err
+				return "", err
 			}
 		}
-		return nil
+		return newDoc.ID, nil
 	}
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	// 2.2 新規作成するケース
-	newDoc, _, err := r.firestoreClient.Collection(r.collectionName).Add(ctx, aDoc)
-	if err != nil {
-		return err
-	}
+	// 2.2 既存データがあるケース
+	doc.Ref.Set(ctx, aDoc)
 	for i := 0; i < len(mss); i++ {
-		_, _, err := newDoc.Collection(r.subCollectionName).Add(ctx, mss[i])
+		_, _, err := doc.Ref.Collection(r.subCollectionName).Add(ctx, mss[i])
 		if err != nil {
-			return err
+			return "", err
 		}
 	}
-	return nil
+	return doc.Ref.ID, nil
 }

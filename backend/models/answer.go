@@ -28,10 +28,10 @@ type Answer struct {
 // params:    詳細データ
 // createdAt: 送信日時
 type Message struct {
-	Text       string        `firestore:"Text,omitempty"`
-	SentByUser bool          `firestore:"SentByUser,omitempty"`
-	Params     MessageParams `firestore:"Params,omitempty"`
-	CreatedAt  time.Time     `firestore:"CreatedAt,omitempty"`
+	Text       string        `firestore:"text,omitempty"`
+	SentByUser bool          `firestore:"sentByUser,omitempty"`
+	Params     MessageParams `firestore:"params,omitempty"`
+	CreatedAt  time.Time     `firestore:"createdAt,omitempty"`
 }
 
 // メッセージ詳細データ
@@ -39,8 +39,8 @@ type Message struct {
 // progress:            解答の点数
 // suggestedQuestionId: この問題を解く前に解くべきと提案されている問題のId
 type MessageParams struct {
-	Score              int `firestore:"Score,omitempty"`
-	SugestedQuestionId int `firestore:"SuggestedQuestion,omitempty"`
+	Score              int `firestore:"score,omitempty"`
+	SugestedQuestionId int `firestore:"suggestedQuestion,omitempty"`
 }
 
 func CreateMessage(m string, sentByUser bool) Message {

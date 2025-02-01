@@ -61,9 +61,12 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 
 	// 4. 解答に対するAIの返信を生成
 	reply, err := s.genaiClient.GenerateContentFromText(ctx, prompt)
+	if err != nil {
+		return nil, err
+	}
 
 	// 5. 解答と返信を保存
-	s.answerRepository.BulkUpsertAnswer(ctx, &models.Answer{
+	id, err := s.answerRepository.BulkUpsertAnswer(ctx, &models.Answer{
 		UserId:       a.UserId,
 		QuestionId:   a.QuestionId,
 		Progress:     a.Progress,
@@ -74,6 +77,10 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 		models.CreateMessage(message, true),
 		models.CreateMessage(reply, false),
 	})
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("Answer saved. id:", id)
 
 	return &PostQuestionAnswerResponse{
 		Message: reply,

@@ -62,8 +62,7 @@ func (h *AnswerHandler) PostQuestionAnswer(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	idToken := echo.Context.Request(c).Header.Get("Authorization")
-	uid, err := h.authService.AuthorizeAsUser(c.Request().Context(), idToken)
+	uid, err := h.authService.AuthorizeAsUser(c.Request().Context(), getIdToken(c))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusForbidden, err)
 	}
