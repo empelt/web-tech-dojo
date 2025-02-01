@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { CustomParameters, UserCredential } from 'firebase/auth'
-import { GalleryVerticalEnd } from 'lucide-react'
+import { Link } from 'react-router'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,14 +17,12 @@ type SignupFormProps = React.ComponentPropsWithoutRef<'div'> & {
     scopes?: string[],
     customOAuthParameters?: CustomParameters,
   ) => Promise<UserCredential | undefined>
-  switchToLogin: () => void
 }
 
 export const SignupForm = ({
   className,
   signInWithGoogle,
   createUserWithEmailAndPassword,
-  switchToLogin,
   ...props
 }: SignupFormProps) => {
   const [email, setEmail] = useState('')
@@ -34,20 +32,12 @@ export const SignupForm = ({
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-2">
           <a className="flex flex-col items-center gap-2 font-medium" href="#">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md">
-              <GalleryVerticalEnd className="size-6" />
-            </div>
-            <span className="sr-only">Acme Inc.</span>
+            <img alt="logo" className="w-14" src="/icon.svg" />
+            <span className="sr-only">WebTech Dojo</span>
           </a>
-          <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
-          <div className="text-center text-sm">
-            Have an account?{' '}
-            <a
-              className="underline underline-offset-4"
-              href="#"
-              onClick={switchToLogin}>
-              Log in
-            </a>
+          <h1 className="text-xl font-bold">Welcome to WebTech Dojo</h1>
+          <div className="text-center text-sm text-balance text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
+            Have an account? <Link to="/login">Log in</Link>
           </div>
         </div>
         <div className="flex flex-col gap-6">
@@ -56,7 +46,7 @@ export const SignupForm = ({
             <Input
               id="email"
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="m@example.com"
+              placeholder="webtech@example.com"
               required
               type="email"
             />
@@ -96,8 +86,9 @@ export const SignupForm = ({
         </Button>
       </div>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{' '}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our{' '}
+        <Link to="/terms">Terms of Service</Link> and{' '}
+        <Link to="/policy">Privacy Policy</Link>.
       </div>
     </div>
   )

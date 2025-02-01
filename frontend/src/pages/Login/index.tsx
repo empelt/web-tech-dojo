@@ -1,37 +1,33 @@
 import { useEffect } from 'react'
 
 import {
+  useAuthState,
   useSignInWithEmailAndPassword,
   useSignInWithGoogle,
 } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router'
 
-import { useAuth } from '@/hooks/useAuth'
-import auth from '@/libs/firebase'
-import { LoginForm } from '@/pages/Login/components/login-form'
+import { auth } from '@/libs/firebase'
+import { LoginForm } from '@/pages/login/components/login-form'
 
 const LoginPage = () => {
-  const { user } = useAuth()
-  const [signInWithGoogle, , googleLoading, googleError] =
-    useSignInWithGoogle(auth)
-  const [signInWithEmailAndPassword, , emailLoading, emailError] =
-    useSignInWithEmailAndPassword(auth)
+  const [user, loading, error] = useAuthState(auth)
+  const [signInWithGoogle] = useSignInWithGoogle(auth)
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth)
   const navigate = useNavigate()
+
   useEffect(() => {
     if (user) {
-      navigate('/')
+      navigate('/questions')
     }
   }, [user, navigate])
-  const switchToSignup = () => {
-    navigate('/signup')
-  }
 
-  if (googleLoading || emailLoading) {
+  if (loading) {
     return <div>Loading...</div>
   }
 
-  if (googleError || emailError) {
-    return <div>Error: {googleError?.message || emailError?.message}</div>
+  if (error) {
+    return <div>Error: {error?.message}</div>
   }
 
   return (
@@ -42,7 +38,6 @@ const LoginPage = () => {
             signInWithEmailAndPassword(email, password)
           }
           signInWithGoogle={() => signInWithGoogle()}
-          switchToSignup={switchToSignup}
         />
       </div>
     </div>

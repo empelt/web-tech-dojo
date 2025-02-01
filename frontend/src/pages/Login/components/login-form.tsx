@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 import { CustomParameters, UserCredential } from 'firebase/auth'
-import { GalleryVerticalEnd } from 'lucide-react'
 import { Link } from 'react-router'
 
 import { Button } from '@/components/ui/button'
@@ -18,14 +17,12 @@ type LoginFormProps = React.ComponentPropsWithoutRef<'div'> & {
     scopes?: string[],
     customOAuthParameters?: CustomParameters,
   ) => Promise<UserCredential | undefined>
-  switchToSignup: () => void
 }
 
 export const LoginForm = ({
   className,
   signInWithEmailAndPassword,
   signInWithGoogle,
-  switchToSignup,
   ...props
 }: LoginFormProps) => {
   const [email, setEmail] = useState('')
@@ -35,20 +32,12 @@ export const LoginForm = ({
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-2">
           <a className="flex flex-col items-center gap-2 font-medium" href="#">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md">
-              <GalleryVerticalEnd className="size-6" />
-            </div>
-            <span className="sr-only">Acme Inc.</span>
+            <img alt="logo" className="w-14" src="/icon.svg" />
+            <span className="sr-only">WebTech Dojo</span>
           </a>
-          <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
-          <div className="text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <a
-              className="underline underline-offset-4"
-              href="#"
-              onClick={switchToSignup}>
-              Sign up
-            </a>
+          <h1 className="text-xl font-bold">Login</h1>
+          <div className="text-center text-sm text-balance text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
+            Don&apos;t have an account? <Link to="/signup">Sign up</Link>
           </div>
         </div>
         <div className="flex flex-col gap-6">
@@ -57,7 +46,7 @@ export const LoginForm = ({
             <Input
               id="email"
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="m@example.com"
+              placeholder="webtech@example.com"
               required
               type="email"
             />
@@ -75,7 +64,7 @@ export const LoginForm = ({
             className="w-full"
             onClick={() => signInWithEmailAndPassword(email, password)}
             type="button">
-            Login
+            Log in
           </Button>
         </div>
         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">

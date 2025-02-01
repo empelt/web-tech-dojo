@@ -1,16 +1,18 @@
+import { signOut } from 'firebase/auth'
+import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router'
 
 import DropdownAvatar from '../Header/DropdownAvatar'
 
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/useAuth'
+import { auth } from '@/libs/firebase'
 
 export const Header = () => {
-  const { user } = useAuth()
+  const [user] = useAuthState(auth)
   const navigate = useNavigate()
 
-  const switchToLoginPage = () => {
-    navigate('/login')
+  const logout = () => {
+    signOut(auth)
   }
   return (
     <div className="flex justify-between px-8 w-screen h-16 items-center shadow-sm fixed top-0 left-0 bg-white z-50">
@@ -20,10 +22,11 @@ export const Header = () => {
       {user ? (
         <DropdownAvatar
           fallback="name"
-          imgSrc="https://github.com/shadcn.png"
+          imgSrc={user.photoURL || ''}
+          logout={logout}
         />
       ) : (
-        <Button onClick={switchToLoginPage}>ログイン</Button>
+        <Button onClick={() => navigate('/login')}>ログイン</Button>
       )}
     </div>
   )
