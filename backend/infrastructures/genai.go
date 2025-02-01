@@ -14,19 +14,18 @@ const (
 	modelName = "gemini-1.5-flash-001"
 )
 
-func NewGenaiClient(ctx context.Context) (*GenaiClient, error) {
+func NewGenai(ctx context.Context) (*Genai, error) {
 	gc, err := genai.NewClient(ctx, os.Getenv("GCP_PROJECT_ID"), location)
 	if err != nil {
 		return nil, err
 	}
-	return &GenaiClient{
-		genaiClient: gc,
+	return &Genai{
+		Client: gc,
 	}, nil
 }
 
-
-func (g *GenaiClient) GenerateContentFromText(ctx context.Context, message string) (string, error) {
-	gemini := g.genaiClient.GenerativeModel(modelName)
+func (g *Genai) GenerateContentFromText(ctx context.Context, message string) (string, error) {
+	gemini := g.Client.GenerativeModel(modelName)
 	prompt := genai.Text(message)
 
 	resp, err := gemini.GenerateContent(ctx, prompt)

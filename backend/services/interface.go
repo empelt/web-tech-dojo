@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 
+	"github.com/empelt/web-tech-dojo/infrastructures"
 	"github.com/empelt/web-tech-dojo/models"
 )
 
@@ -16,8 +17,19 @@ type QuestionRepository interface {
 	FindQuestion(ctx context.Context, id int) (*models.Question, error)
 }
 
-type ChatService struct {
-	genaiClient GenaiClient
+type AnswerRepository interface {
+	FindAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error)
+	BulkUpsertAnswer(ctx context.Context, answer *models.Answer, newMessages []models.Message) (string, error)
+}
+
+type AuthService struct {
+	firebaseAuth *infrastructures.FirebaseAuth
+}
+
+type AnswerService struct {
+	genaiClient        GenaiClient
+	questionRepository QuestionRepository
+	answerRepository   AnswerRepository
 }
 
 type QuestionService struct {

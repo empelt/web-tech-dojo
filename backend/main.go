@@ -37,24 +37,39 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	firestoreClient, err := firebaseApp.NewFirestoreClient(ctx)
+	firestore, err := infrastructures.NewFirestore(ctx, firebaseApp)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	genaiClient, err := infrastructures.NewGenaiClient(ctx)
+	firebaseAuth, err := infrastructures.NewFirebaseAuth(ctx, firebaseApp)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	genai, err := infrastructures.NewGenai(ctx)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
 	// Initialize Repository
-	questionRepository, err := repository.NewQuestion(firestoreClient)
+	questionRepository, err := repository.NewQuestionRepository(firestore)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	answerRepository, err := repository.NewAnswerRepository(firestore)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
 	// Initialize Services
-	service, err := services.New(genaiClient)
+	authService, err := services.NewAuthService(firebaseAuth)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	answerService, err := services.NewAnswerService(genai, questionRepository, answerRepository)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -65,7 +80,7 @@ func main() {
 	}
 
 	// Initialize Handlers
-	handler, err := handlers.New(service)
+	answerHandler, err := handlers.NewAnswerHandler(authService, answerService)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -75,7 +90,8 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	e.POST("/api/chat", handler.PostQuestionAnswer)
 	e.GET("/api/question/:id", questionHandler.GetQuestion)
+	e.GET("/api/question/:id/answer", answerHandler.GetPreviousAnswer)
+	e.POST("/api/question/:id/answer", answerHandler.PostQuestionAnswer)
 	e.Logger.Fatal(e.Start(":" + port))
 }
