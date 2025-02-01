@@ -80,7 +80,7 @@ func main() {
 	}
 
 	// Initialize Handlers
-	handler, err := handlers.NewAnswerHandler(authService, answerService)
+	answerHandler, err := handlers.NewAnswerHandler(authService, answerService)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -90,7 +90,8 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	e.POST("/api/chat", handler.PostQuestionAnswer)
 	e.GET("/api/question/:id", questionHandler.GetQuestion)
+	e.GET("/api/question/:id/answer", answerHandler.GetPreviousAnswer)
+	e.POST("/api/question/:id/answer", answerHandler.PostQuestionAnswer)
 	e.Logger.Fatal(e.Start(":" + port))
 }

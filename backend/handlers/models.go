@@ -13,7 +13,7 @@ type GetPreviousAnswerResponse struct {
 }
 
 func BuildGetPreviousAnswerReponse(a *models.Answer) GetPreviousAnswerResponse {
-	var mss []Message
+	mss := []Message{}
 	for i := range a.Messages {
 		mss = append(mss, buildMessage(a.Messages[i]))
 	}
