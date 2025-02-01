@@ -20,6 +20,7 @@ type AnswerService interface {
 
 type QuestionService interface {
 	GetQuestion(ctx context.Context, id int) (*services.GetQuestionResponse, error)
+	SearchQuestions(ctx context.Context, keyword string, tags []string) ([]models.Question, error)
 }
 
 type AnswerHandler struct {

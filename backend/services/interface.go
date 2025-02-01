@@ -15,6 +15,8 @@ type GenaiClient interface {
 
 type QuestionRepository interface {
 	FindQuestion(ctx context.Context, id int) (*models.Question, error)
+	GetAllQuestions(ctx context.Context) ([]models.Question, error)
+	FilterQuestionsByTags(ctx context.Context, tags []string) ([]models.Question, error)
 }
 
 type AnswerRepository interface {

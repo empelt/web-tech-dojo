@@ -41,11 +41,18 @@ func (h *QuestionHandler) GetQuestion(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, errors.New("internal server error"))
 	}
-	return c.JSON(http.StatusOK, &GetQuestionResponse{
-		Id:        q.Question.Id,
-		Title:     q.Question.Title,
-		Content:   q.Question.Content,
-		Tags:      q.Question.Tags,
-		CreatedAt: q.Question.CreatedAt,
-	})
+	return c.JSON(http.StatusOK, q)
+}
+
+func (h *QuestionHandler) SearchQuestions(c echo.Context) error {
+	request := SearchQuestionsRequest{}
+	if err := c.Bind(&request); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+	qs, err := h.questionService.SearchQuestions(c.Request().Context(), request.Keyword, request.Tags)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, qs)
 }
