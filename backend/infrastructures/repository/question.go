@@ -52,26 +52,6 @@ func (r *QuestionRepository) GetAllQuestions(ctx context.Context) ([]models.Ques
 	return questions, nil
 }
 
-func (r *QuestionRepository) GetQuestions(ctx context.Context, qids []int) ([]models.Question, error) {
-	itr := r.firestore.Client.Collection(r.collectionName).
-		Where("questionId", "in", qids).
-		Documents(ctx)
-	questions := []models.Question{}
-	for {
-		doc, err := itr.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			return nil, err
-		}
-		var q models.Question
-		doc.DataTo(&q)
-		questions = append(questions, q)
-	}
-	return questions, nil
-}
-
 func (r *QuestionRepository) FilterQuestionsByTags(ctx context.Context, tags []string) ([]models.Question, error) {
 	query := r.firestore.Client.Collection(r.collectionName).OrderBy("id", firestore.Asc)
 	for _, tag := range tags {
