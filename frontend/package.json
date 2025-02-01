@@ -73,7 +73,7 @@
     "bracketSameLine": true
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "*.{js,jsx,ts,tsx,html}": [
       "prettier --write",
       "eslint ."
     ]

@@ -1,6 +1,7 @@
 import { MoreHorizontal } from 'lucide-react'
 import { CiHeart } from 'react-icons/ci'
 import { FaHeart } from 'react-icons/fa'
+import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -10,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -21,16 +23,65 @@ import {
 import { Question } from '@/types/question'
 
 type Props = {
+  loading: boolean
+  onBookmark: (id: string) => void
   questions: Question[]
 }
 
-const QuestionsTable = ({ questions }: Props) => {
+const QuestionsTable = ({ questions, onBookmark, loading }: Props) => {
+  const navigate = useNavigate()
+
+  if (loading) {
+    return (
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px] text-center">Bookmark</TableHead>
+              <TableHead>No.</TableHead>
+              <TableHead>Title</TableHead>
+              <TableHead>Tags</TableHead>
+              <TableHead>Progress</TableHead>
+              <TableHead />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {[...Array(10)].map((_, index) => (
+              <TableRow key={index}>
+                <TableCell className="text-center">
+                  <Skeleton className="w-6 h-6 mx-auto" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-10 h-6" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-52 h-6" />
+                </TableCell>
+                <TableCell>
+                  <div className="flex w-[100px] items-center">
+                    <Skeleton className="w-10 h-4 mr-2 rounded-full" />
+                    <Skeleton className="w-10 h-4 mr-2 rounded-full" />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-52 h-6" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="w-8 h-8" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    )
+  }
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Bookmark</TableHead>
+            <TableHead className="w-[100px] text-center">Bookmark</TableHead>
             <TableHead>No.</TableHead>
             <TableHead>Title</TableHead>
             <TableHead>Tags</TableHead>
@@ -39,23 +90,34 @@ const QuestionsTable = ({ questions }: Props) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {questions.map((question) => (
-            <TableRow key={question.id}>
-              <TableCell>
-                {question.isBookmarked ? (
-                  <FaHeart
-                    className="ml-2 text-red-500 cursor-pointer"
-                    type="button"
-                  />
-                ) : (
-                  <CiHeart
-                    className="ml-2 text-gray-500 cursor-pointer"
-                    type="button"
-                  />
-                )}
+          {questions.map((question, index) => (
+            <TableRow key={index}>
+              <TableCell className="text-center">
+                <button
+                  className="transparent"
+                  onClick={() => onBookmark(question.id)}>
+                  {question.isBookmarked ? (
+                    <FaHeart
+                      className="text-red-500 cursor-pointer"
+                      size={16}
+                    />
+                  ) : (
+                    <CiHeart
+                      className="text-gray-500 cursor-pointer"
+                      size={20}
+                    />
+                  )}
+                </button>
               </TableCell>
               <TableCell>{question.id}</TableCell>
-              <TableCell>{question.title}</TableCell>
+              <TableCell>
+                <Button
+                  className="text-left cursor-pointer"
+                  onClick={() => navigate('/questions/' + question.id)}
+                  variant="ghost">
+                  {question.title}
+                </Button>
+              </TableCell>
               <TableCell>
                 <div className="flex w-[100px] items-center">
                   {question.tags.map((tag) => (
