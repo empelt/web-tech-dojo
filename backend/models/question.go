@@ -15,6 +15,6 @@ type Question struct {
 	Id        int       `json:"id" firestore:"id,omitempty"`
 	Title     string    `json:"title" firestore:"title,omitempty"`
 	Content   string    `json:"content" firestore:"content,omitempty"`
-	Tags      []string  `json:"tag" firestore:"tags,omitempty"`
+	Tags      []string  `json:"tags" firestore:"tags,omitempty"`
 	CreatedAt time.Time `json:"createdAt" firestore:"createAt,omitempty"`
 }
