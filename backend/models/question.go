@@ -12,9 +12,9 @@ import (
 // tags:      問題カテゴリ, 難易度など
 // createdAt: 問題作成日時
 type Question struct {
-	Id        int
-	Title     string
-	Content   string
-	Tags      []string
-	CreatedAt time.Time
+	Id        int       `json:"id" firestore:"id,omitempty"`
+	Title     string    `json:"title" firestore:"title,omitempty"`
+	Content   string    `json:"content" firestore:"content,omitempty"`
+	Tags      []string  `json:"tag" firestore:"tags,omitempty"`
+	CreatedAt time.Time `json:"createdAt" firestore:"createAt,omitempty"`
 }

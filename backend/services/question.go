@@ -25,3 +25,11 @@ func (s *QuestionService) GetQuestion(ctx context.Context, id int) (*GetQuestion
 		Question: q,
 	}, nil
 }
+
+func (s *QuestionService) GetAllQuestions(ctx context.Context) ([]models.Question, error) {
+	qs, err := s.questionRepository.GetAllQuestions(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return qs, nil
+}

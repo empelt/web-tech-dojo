@@ -32,3 +32,21 @@ func (r *QuestionRepository) FindQuestion(ctx context.Context, id int) (*models.
 	}
 	return &q, nil
 }
+
+func (r *QuestionRepository) GetAllQuestions(ctx context.Context) ([]models.Question, error) {
+	itr := r.firestore.Client.Collection(r.collectionName).Documents(ctx)
+	questions := []models.Question{}
+	for {
+		doc, err := itr.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		var q models.Question
+		doc.DataTo(&q)
+		questions = append(questions, q)
+	}
+	return questions, nil
+}

@@ -20,6 +20,7 @@ type AnswerService interface {
 
 type QuestionService interface {
 	GetQuestion(ctx context.Context, id int) (*services.GetQuestionResponse, error)
+	GetAllQuestions(ctx context.Context) ([]models.Question, error)
 }
 
 type AnswerHandler struct {

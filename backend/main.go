@@ -90,6 +90,7 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
+	e.GET("/api/question", questionHandler.GetAllQuestions)
 	e.GET("/api/question/:id", questionHandler.GetQuestion)
 	e.GET("/api/question/:id/answer", answerHandler.GetPreviousAnswer)
 	e.POST("/api/question/:id/answer", answerHandler.PostQuestionAnswer)
