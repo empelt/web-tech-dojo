@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
+import { Link } from 'react-router'
 
 type LoginFormProps = React.ComponentPropsWithoutRef<'div'> & {
   signInWithEmailAndPassword: (
@@ -27,12 +28,10 @@ export const LoginForm = ({
   switchToSignup,
   ...props
 }: LoginFormProps) => {
-  // const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      {/* <form onSubmit={() => signInWithEmailAndPassword(email, password)}> */}
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-2">
           <a className="flex flex-col items-center gap-2 font-medium" href="#">
@@ -85,7 +84,6 @@ export const LoginForm = ({
           </span>
         </div>
       </div>
-      {/* </form> */}
       <Button
         className="w-full"
         onClick={() => signInWithGoogle()}
@@ -99,8 +97,9 @@ export const LoginForm = ({
         Continue with Google
       </Button>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{' '}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our{' '}
+        <Link to="/terms">Terms of Service</Link> and{' '}
+        <Link to="/policy">Privacy Policy</Link>.
       </div>
     </div>
   )

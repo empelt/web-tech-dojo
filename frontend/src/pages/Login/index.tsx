@@ -19,12 +19,10 @@ const LoginPage = () => {
   const navigate = useNavigate()
   useEffect(() => {
     if (user) {
-      console.log(user)
       navigate('/')
     }
   }, [user, navigate])
   const switchToSignup = () => {
-    console.log('switchToSignup')
     navigate('/signup')
   }
 
