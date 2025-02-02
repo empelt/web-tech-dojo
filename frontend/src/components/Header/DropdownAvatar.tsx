@@ -10,14 +10,18 @@ import {
 type Props = {
   fallback: string
   imgSrc: string
+  logout: () => void
 }
 
-const DropdownAvatar = ({ imgSrc, fallback }: Props) => {
+const DropdownAvatar = ({ imgSrc, fallback, logout }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage alt="avatar image" src={imgSrc} />
+          <AvatarImage
+            alt="avatar image"
+            src={imgSrc ?? 'https://github.com/shadcn.png'}
+          />
           <AvatarFallback>{fallback}</AvatarFallback>
           <span className="sr-only">Toggle user menu</span>
         </Avatar>
@@ -26,7 +30,7 @@ const DropdownAvatar = ({ imgSrc, fallback }: Props) => {
         <DropdownMenuItem>DashBoard</DropdownMenuItem>
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
