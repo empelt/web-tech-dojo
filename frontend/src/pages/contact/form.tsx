@@ -17,7 +17,10 @@ import { useToast } from '@/hooks/use-toast'
 
 const formSchema = z.object({
   name: z.string().nonempty({ message: 'Name is required.' }),
-  email: z.string().email({ message: 'Invalid email address.' }),
+  email: z
+    .string()
+    .nonempty({ message: 'Email is required.' })
+    .email({ message: 'Invalid email address.' }),
   content: z.string().nonempty({ message: 'Content is required.' }),
 })
 

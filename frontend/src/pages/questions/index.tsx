@@ -1,87 +1,16 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import QuestionsPagenation from './components/pagenation'
+import axios, { AxiosResponse } from 'axios'
+
 import QuestionsTable from './components/table'
 import Toolbar from './components/toolbar'
 
 import { Question } from '@/types/question'
 
-const sampleQuestions: Question[] = [
-  {
-    id: '1',
-    title: 'How to use React Query?',
-    tags: ['react', 'query'],
-    isBookmarked: false,
-    progress: 0,
-  },
-  {
-    id: '2',
-    title: 'How to use React Table?',
-    tags: ['react', 'table'],
-    isBookmarked: false,
-    progress: 20,
-  },
-  {
-    id: '3',
-    title: 'How to use React Hook Form?',
-    tags: ['react', 'hook', 'form'],
-    isBookmarked: false,
-    progress: 80,
-  },
-  {
-    id: '3',
-    title: 'How to use React Hook Form?',
-    tags: ['react', 'hook', 'form'],
-    isBookmarked: false,
-    progress: 80,
-  },
-  {
-    id: '3',
-    title: 'How to use React Hook Form?',
-    tags: ['react', 'hook', 'form'],
-    isBookmarked: false,
-    progress: 80,
-  },
-  {
-    id: '3',
-    title: 'How to use React Hook Form?',
-    tags: ['react', 'hook', 'form'],
-    isBookmarked: false,
-    progress: 80,
-  },
-  {
-    id: '3',
-    title: 'How to use React Hook Form?',
-    tags: ['react', 'hook', 'form'],
-    isBookmarked: false,
-    progress: 80,
-  },
-  {
-    id: '3',
-    title: 'How to use React Hook Form?',
-    tags: ['react', 'hook', 'form'],
-    isBookmarked: false,
-    progress: 80,
-  },
-  {
-    id: '3',
-    title: 'How to use React Hook Form?',
-    tags: ['react', 'hook', 'form'],
-    isBookmarked: false,
-    progress: 80,
-  },
-  {
-    id: '3',
-    title: 'How to use React Hook Form?',
-    tags: ['react', 'hook', 'form'],
-    isBookmarked: false,
-    progress: 80,
-  },
-]
-
 const QuestionsPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [questions, setQuestions] = useState<Question[]>(sampleQuestions)
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [filteredQuestions, setFilteredQuestions] = useState<Question[]>([])
   const [title, setTitle] = useState<string>('')
   const [selectedTagsValues, setSelectedTagsValues] = useState<Set<string>>(
     new Set(),
@@ -107,6 +36,31 @@ const QuestionsPage = () => {
     [title, selectedTagsValues, selectedBookmarkValues, selectedProgressValues],
   )
 
+  useEffect(() => {
+    setLoading(true)
+    // 2回実行されるのを防ぐ
+    // see https://react.dev/learn/synchronizing-with-effects#fetching-data
+    let ignore = false
+    axios
+      .get(import.meta.env.VITE_BACKEND_URL + '/api/question')
+      .then((res: AxiosResponse<Question[]>) => {
+        const { data, status } = res
+        if (!ignore && status === 200) {
+          setFilteredQuestions(data)
+          setQuestions(data)
+        }
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+    return () => {
+      ignore = true
+    }
+  }, [])
+
   const onBookmark = (id: string) => {
     setQuestions((prevQuestions) =>
       prevQuestions.map((question) =>
@@ -117,25 +71,54 @@ const QuestionsPage = () => {
     )
   }
 
-  const onClickSearch = () => {
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-    }, 3000)
-  }
+  useEffect(() => {
+    setFilteredQuestions(
+      questions.filter((question) => {
+        if (title) {
+          return question.title.includes(title)
+        }
+        if (selectedTagsValues.size > 0) {
+          return question.tags.some((tag) => selectedTagsValues.has(tag))
+        }
+        if (selectedBookmarkValues.size > 0) {
+          switch (question.isBookmarked) {
+            case true:
+              return selectedBookmarkValues.has('isBookmarked')
+            default:
+              return selectedBookmarkValues.has('isNotBookmarked')
+          }
+        }
+        if (selectedProgressValues.size > 0) {
+          switch (question.progress) {
+            case 0:
+              return selectedProgressValues.has('todo')
+            case 100:
+              return selectedProgressValues.has('completed')
+            default:
+              return selectedProgressValues.has('inProgress')
+          }
+        }
+        return true
+      }),
+    )
+  }, [
+    title,
+    selectedTagsValues,
+    selectedBookmarkValues,
+    selectedProgressValues,
+    questions,
+  ])
 
   return (
     <div className="container mx-auto">
       <h1 className="text-2xl font-bold mt-24 mb-4">Questions</h1>
       <div className="flex flex-col gap-4">
-        <Toolbar filterState={filterState} onClickSearch={onClickSearch} />
+        <Toolbar filterState={filterState} />
         <QuestionsTable
           loading={loading}
           onBookmark={onBookmark}
-          questions={questions}
+          questions={filteredQuestions}
         />
-        {/* TODO: 真面目にページネーションの実装する */}
-        <QuestionsPagenation />
       </div>
     </div>
   )

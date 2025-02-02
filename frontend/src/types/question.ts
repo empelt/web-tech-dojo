@@ -1,6 +1,7 @@
 import { CheckCircle, Circle, CircleOff, HelpCircle, Timer } from 'lucide-react'
 
 export type Question = {
+  content: string
   id: string
   isBookmarked: boolean
   progress: number
@@ -34,6 +35,16 @@ export const tags = [
     label: 'Backend',
     icon: CircleOff,
   },
+  {
+    value: 'react',
+    label: 'React',
+    icon: CircleOff,
+  },
+  {
+    value: 'hook',
+    label: 'Hook',
+    icon: CircleOff,
+  },
 ]
 
 export const bookmarkStatus = [
@@ -51,8 +62,8 @@ export const bookmarkStatus = [
 
 export const progressStatus = [
   {
-    value: 'onHold',
-    label: 'On Hold',
+    value: 'todo',
+    label: 'To Do',
     icon: HelpCircle,
   },
   {
