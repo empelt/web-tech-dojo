@@ -63,7 +63,7 @@ func (r *AnswerRepository) FindAnswer(ctx context.Context, uid string, qid int) 
 	}, nil
 }
 
-func (r *AnswerRepository) BulkUpsertAnswer(ctx context.Context, a *models.Answer, mss []models.Message) (string, error) {
+func (r *AnswerRepository) UpsertAnswer(ctx context.Context, a *models.Answer, mss []models.Message) (string, error) {
 	aDoc := AnswerDocument{
 		UserId:     a.UserId,
 		QuestionId: a.QuestionId,

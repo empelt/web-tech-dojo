@@ -22,7 +22,7 @@ func NewAnswerService(genaiClient GenaiClient, userRepository UserRepository, qu
 	}, nil
 }
 
-func (s *AnswerService) GetPreviousAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error) {
+func (s *AnswerService) GetPreviousAnswers(ctx context.Context, uid string, qid int) (*models.Answer, error) {
 	// 1. 既存の解答データを取得
 	a, err := s.answerRepository.FindAnswer(ctx, uid, qid)
 	if err != nil {
@@ -50,7 +50,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	}
 
 	// 2. 既存の解答データを取得
-	a, err := s.GetPreviousAnswer(ctx, uid, qid)
+	a, err := s.GetPreviousAnswers(ctx, uid, qid)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 
 	// 5. データを保存
 	// 5.1 解答と返信を保存
-	if _, err := s.answerRepository.BulkUpsertAnswer(ctx, &models.Answer{
+	if _, err := s.answerRepository.UpsertAnswer(ctx, &models.Answer{
 		UserId:     a.UserId,
 		QuestionId: a.QuestionId,
 		Messages:   []models.Message{},
@@ -111,7 +111,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 		})
 	}
 	if needUpsert {
-		if _, err := s.userRepository.BulkUpsertUser(ctx, uid, u); err != nil {
+		if _, err := s.userRepository.UpsertUser(ctx, uid, u); err != nil {
 			return nil, err
 		}
 	}

@@ -21,7 +21,7 @@ func getIdToken(c echo.Context) string {
 	return strings.TrimPrefix(authorization, "Bearer ")
 }
 
-func (h *AnswerHandler) GetPreviousAnswer(c echo.Context) error {
+func (h *AnswerHandler) GetPreviousAnswers(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, errors.New("id is required"))
@@ -36,11 +36,11 @@ func (h *AnswerHandler) GetPreviousAnswer(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusForbidden, err)
 	}
 
-	a, err := h.answerService.GetPreviousAnswer(c.Request().Context(), uid, qid)
+	a, err := h.answerService.GetPreviousAnswers(c.Request().Context(), uid, qid)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
-	return c.JSON(http.StatusOK, BuildGetPreviousAnswerReponse(a))
+	return c.JSON(http.StatusOK, BuildGetPreviousAnswersReponse(a))
 }
 
 func (h *AnswerHandler) PostQuestionAnswer(c echo.Context) error {

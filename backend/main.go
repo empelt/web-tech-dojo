@@ -107,7 +107,7 @@ func main() {
 
 	e.GET("/api/question", questionHandler.GetAllQuestions)
 	e.GET("/api/question/:id", questionHandler.GetQuestion)
-	e.GET("/api/question/:id/answer", answerHandler.GetPreviousAnswer)
+	e.GET("/api/question/:id/answer", answerHandler.GetPreviousAnswers)
 	e.POST("/api/question/:id/answer", answerHandler.PostQuestionAnswer)
 	e.POST("/api/bookmark/question/:id", bookmarkHandler.AddBookmark)
 	e.DELETE("/api/bookmark/question/:id", bookmarkHandler.RemoveBookmark)

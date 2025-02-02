@@ -33,7 +33,7 @@ func (r *UserRepository) GetUser(ctx context.Context, uid string) (*models.User,
 	return &b, nil
 }
 
-func (r *UserRepository) BulkUpsertUser(ctx context.Context, uid string, u *models.User) (string, error) {
+func (r *UserRepository) UpsertUser(ctx context.Context, uid string, u *models.User) (string, error) {
 	itr := r.firestore.Client.Collection(r.collectionName).Where("userId", "==", uid).Documents(ctx)
 	doc, err := itr.Next()
 	if err == iterator.Done {

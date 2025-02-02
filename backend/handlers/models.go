@@ -10,7 +10,7 @@ type GetPreviousAnswerResponse struct {
 	Messages []Message `json:"messages"`
 }
 
-func BuildGetPreviousAnswerReponse(a *models.Answer) GetPreviousAnswerResponse {
+func BuildGetPreviousAnswersReponse(a *models.Answer) GetPreviousAnswerResponse {
 	mss := []Message{}
 	for i := range a.Messages {
 		mss = append(mss, buildMessage(a.Messages[i]))
