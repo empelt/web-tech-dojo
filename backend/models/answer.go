@@ -12,10 +12,10 @@ import (
 // Messages:     メッセージ
 // updatedAt:    最終更新日時
 type Answer struct {
-	UserId     string
-	QuestionId int
-	Messages   []Message
-	UpdatedAt  time.Time
+	UserId     string    `firestore:"userId,omitempty"`
+	QuestionId int       `firestore:"questionId,omitempty"`
+	Messages   []Message `firestore:"messages,omitempty"`
+	UpdatedAt  time.Time `firestore:"updatedAt,omitempty"`
 }
 
 // メッセージ
