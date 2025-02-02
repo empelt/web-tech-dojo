@@ -47,7 +47,7 @@ func (s *UserService) AddBookmark(ctx context.Context, uid string, qid int) erro
 		QuestionIds: append(u.QuestionIds, qid),
 		Progresses:  u.Progresses,
 	}
-	if _, err := s.userRepository.BulkUpsertUser(ctx, uid, u); err != nil {
+	if _, err := s.userRepository.UpsertUser(ctx, uid, u); err != nil {
 		return err
 	}
 	return nil
@@ -75,7 +75,7 @@ func (s *UserService) RemoveBookmark(ctx context.Context, uid string, qid int) e
 		QuestionIds: qids,
 		Progresses:  u.Progresses,
 	}
-	if _, err := s.userRepository.BulkUpsertUser(ctx, uid, u); err != nil {
+	if _, err := s.userRepository.UpsertUser(ctx, uid, u); err != nil {
 		return err
 	}
 	return nil

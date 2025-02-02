@@ -39,7 +39,7 @@ func (r *AnswerRepository) FindAnswer(ctx context.Context, uid string, qid int) 
 	return &a, nil
 }
 
-func (r *AnswerRepository) BulkUpsertAnswer(ctx context.Context, a *models.Answer) (string, error) {
+func (r *AnswerRepository) UpsertAnswer(ctx context.Context, a *models.Answer) (string, error) {
 	// 1. 既存データ存在確認
 	itr := r.firestore.Client.Collection(r.collectionName).
 		Where("userId", "==", a.UserId).

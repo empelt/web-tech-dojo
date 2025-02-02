@@ -14,7 +14,7 @@ type AuthService interface {
 }
 
 type AnswerService interface {
-	GetPreviousAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error)
+	GetPreviousAnswers(ctx context.Context, uid string, qid int) (*models.Answer, error)
 	PostQuestionAnswer(ctx context.Context, uid string, qid int, message string) (*services.PostQuestionAnswerResponse, error)
 }
 

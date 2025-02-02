@@ -20,12 +20,12 @@ type QuestionRepository interface {
 
 type AnswerRepository interface {
 	FindAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error)
-	BulkUpsertAnswer(ctx context.Context, answer *models.Answer) (string, error)
+	UpsertAnswer(ctx context.Context, answer *models.Answer) (string, error)
 }
 
 type UserRepository interface {
 	GetUser(ctx context.Context, uid string) (*models.User, error)
-	BulkUpsertUser(ctx context.Context, uid string, u *models.User) (string, error)
+	UpsertUser(ctx context.Context, uid string, u *models.User) (string, error)
 }
 
 type AuthService struct {
