@@ -14,7 +14,6 @@ import (
 type Answer struct {
 	UserId     string
 	QuestionId int
-	Progress   int
 	Messages   []Message
 	UpdatedAt  time.Time
 }

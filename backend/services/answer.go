@@ -13,9 +13,10 @@ type PostQuestionAnswerResponse struct {
 	Message string
 }
 
-func NewAnswerService(genaiClient GenaiClient, questionRepository QuestionRepository, answerRepository AnswerRepository) (*AnswerService, error) {
+func NewAnswerService(genaiClient GenaiClient, userRepository UserRepository, questionRepository QuestionRepository, answerRepository AnswerRepository) (*AnswerService, error) {
 	return &AnswerService{
 		genaiClient:        genaiClient,
+		userRepository:     userRepository,
 		questionRepository: questionRepository,
 		answerRepository:   answerRepository,
 	}, nil
@@ -30,7 +31,6 @@ func (s *AnswerService) GetPreviousAnswer(ctx context.Context, uid string, qid i
 			a = &models.Answer{
 				UserId:     uid,
 				QuestionId: qid,
-				Progress:   0,
 				Messages:   []models.Message{},
 				UpdatedAt:  time.Now(),
 			}
@@ -64,11 +64,11 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 		return nil, err
 	}
 
-	// 5. 解答と返信を保存
+	// 5. データを保存
+	// 5.1 解答と返信を保存
 	if _, err := s.answerRepository.BulkUpsertAnswer(ctx, &models.Answer{
 		UserId:     a.UserId,
 		QuestionId: a.QuestionId,
-		Progress:   a.Progress,
 		Messages:   []models.Message{},
 		UpdatedAt:  time.Now(),
 	}, []models.Message{
@@ -78,6 +78,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 		return nil, err
 	}
 
+	// 5.2 進行状況を保存
 	u, err := s.userRepository.GetUser(ctx, uid)
 	if err != nil {
 		if err == models.EntityNotFoundError {

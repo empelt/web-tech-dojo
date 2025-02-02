@@ -13,7 +13,6 @@ import (
 type AnswerDocument struct {
 	UserId     string    `firestore:"userId,omitempty"`
 	QuestionId int       `firestore:"questionId,omitempty"`
-	Progress   int       `firestore:"progress,omitempty"`
 	UpdatedAt  time.Time `firestore:"updatedAt,omitempty"`
 }
 
@@ -59,7 +58,6 @@ func (r *AnswerRepository) FindAnswer(ctx context.Context, uid string, qid int) 
 	return &models.Answer{
 		UserId:     a.UserId,
 		QuestionId: a.QuestionId,
-		Progress:   a.Progress,
 		Messages:   mss,
 		UpdatedAt:  a.UpdatedAt,
 	}, nil
@@ -69,7 +67,6 @@ func (r *AnswerRepository) BulkUpsertAnswer(ctx context.Context, a *models.Answe
 	aDoc := AnswerDocument{
 		UserId:     a.UserId,
 		QuestionId: a.QuestionId,
-		Progress:   a.Progress,
 		UpdatedAt:  a.UpdatedAt,
 	}
 

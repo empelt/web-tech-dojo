@@ -79,7 +79,7 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	answerService, err := services.NewAnswerService(genai, questionRepository, answerRepository)
+	answerService, err := services.NewAnswerService(genai, userRepository, questionRepository, answerRepository)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}

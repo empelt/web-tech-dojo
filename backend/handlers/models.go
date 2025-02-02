@@ -7,9 +7,7 @@ import (
 )
 
 type GetPreviousAnswerResponse struct {
-	Progress     int       `json:"progress"`
-	IsBookmarked bool      `json:"isBookmarked"`
-	Messages     []Message `json:"messages"`
+	Messages []Message `json:"messages"`
 }
 
 func BuildGetPreviousAnswerReponse(a *models.Answer) GetPreviousAnswerResponse {
@@ -18,7 +16,6 @@ func BuildGetPreviousAnswerReponse(a *models.Answer) GetPreviousAnswerResponse {
 		mss = append(mss, buildMessage(a.Messages[i]))
 	}
 	return GetPreviousAnswerResponse{
-		Progress: a.Progress,
 		Messages: mss,
 	}
 }

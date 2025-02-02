@@ -4,6 +4,8 @@ import (
 	"context"
 	"slices"
 	"time"
+
+	"github.com/empelt/web-tech-dojo/models"
 )
 
 type GetQuestionResponse struct {
@@ -57,12 +59,20 @@ func (s *QuestionService) GetAllQuestions(ctx context.Context, uid string) ([]Qu
 	}
 	u, err := s.userService.GetUser(ctx, uid)
 	if err != nil {
-		return nil, err
+		if err == models.EntityNotFoundError {
+			u = &models.User{
+				UserId:      uid,
+				QuestionIds: []int{},
+				Progresses:  []models.Progress{},
+			}
+		} else {
+			return nil, err
+		}
 	}
 
 	qss := []QuestionSummary{}
 	for _, q := range qs {
-		progress := 0
+		progress := -1
 		for _, p := range u.Progresses {
 			if p.QuestionId == q.Id {
 				progress = p.Progress
