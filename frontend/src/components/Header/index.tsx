@@ -21,7 +21,7 @@ export const Header = () => {
       </button>
       {user ? (
         <DropdownAvatar
-          fallback="name"
+          fallback={user.displayName?.charAt(0) || ''}
           imgSrc={user.photoURL || ''}
           logout={logout}
         />
