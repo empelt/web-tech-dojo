@@ -23,7 +23,7 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE"},
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAuthorization},
 		AllowCredentials: true,
 	}))
@@ -63,18 +63,28 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
+	userRepository, err := repository.NewUserRepository(firestore)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
 	// Initialize Services
 	authService, err := services.NewAuthService(firebaseAuth)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	answerService, err := services.NewAnswerService(genai, questionRepository, answerRepository)
+	userService, err := services.NewUserService(userRepository)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	questionService, err := services.NewQuestionService(questionRepository)
+	answerService, err := services.NewAnswerService(genai, userRepository, questionRepository, answerRepository)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	questionService, err := services.NewQuestionService(questionRepository, userService)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -85,14 +95,21 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	questionHandler, err := handlers.NewQuestionHandler(questionService)
+	questionHandler, err := handlers.NewQuestionHandler(authService, questionService)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	bookmarkHandler, err := handlers.NewBookmarkHandler(authService, userService)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
 	e.GET("/api/question", questionHandler.GetAllQuestions)
 	e.GET("/api/question/:id", questionHandler.GetQuestion)
-	e.GET("/api/question/:id/answer", answerHandler.GetPreviousAnswer)
+	e.GET("/api/question/:id/answer", answerHandler.GetPreviousAnswers)
 	e.POST("/api/question/:id/answer", answerHandler.PostQuestionAnswer)
+	e.POST("/api/bookmark/question/:id", bookmarkHandler.AddBookmark)
+	e.DELETE("/api/bookmark/question/:id", bookmarkHandler.RemoveBookmark)
 	e.Logger.Fatal(e.Start(":" + port))
 }

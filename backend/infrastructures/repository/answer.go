@@ -11,11 +11,9 @@ import (
 )
 
 type AnswerDocument struct {
-	UserId       string    `firestore:"userId,omitempty"`
-	QuestionId   int       `firestore:"questionId,omitempty"`
-	Progress     int       `firestore:"progress,omitempty"`
-	IsBookmarked bool      `firestore:"iSBookmarked,omitempty"`
-	UpdatedAt    time.Time `firestore:"updatedAt,omitempty"`
+	UserId     string    `firestore:"userId,omitempty"`
+	QuestionId int       `firestore:"questionId,omitempty"`
+	UpdatedAt  time.Time `firestore:"updatedAt,omitempty"`
 }
 
 func NewAnswerRepository(firestore *infrastructures.Firestore) (*AnswerRepository, error) {
@@ -58,22 +56,18 @@ func (r *AnswerRepository) FindAnswer(ctx context.Context, uid string, qid int) 
 	}
 
 	return &models.Answer{
-		UserId:       a.UserId,
-		QuestionId:   a.QuestionId,
-		Progress:     a.Progress,
-		IsBookmarked: a.IsBookmarked,
-		Messages:     mss,
-		UpdatedAt:    a.UpdatedAt,
+		UserId:     a.UserId,
+		QuestionId: a.QuestionId,
+		Messages:   mss,
+		UpdatedAt:  a.UpdatedAt,
 	}, nil
 }
 
-func (r *AnswerRepository) BulkUpsertAnswer(ctx context.Context, a *models.Answer, mss []models.Message) (string, error) {
+func (r *AnswerRepository) UpsertAnswer(ctx context.Context, a *models.Answer, mss []models.Message) (string, error) {
 	aDoc := AnswerDocument{
-		UserId:       a.UserId,
-		QuestionId:   a.QuestionId,
-		Progress:     a.Progress,
-		IsBookmarked: a.IsBookmarked,
-		UpdatedAt:    a.UpdatedAt,
+		UserId:     a.UserId,
+		QuestionId: a.QuestionId,
+		UpdatedAt:  a.UpdatedAt,
 	}
 
 	// 1. 既存データ存在確認
@@ -101,7 +95,9 @@ func (r *AnswerRepository) BulkUpsertAnswer(ctx context.Context, a *models.Answe
 	}
 
 	// 2.2 既存データがあるケース
-	doc.Ref.Set(ctx, aDoc)
+	if _, err := doc.Ref.Set(ctx, aDoc); err != nil {
+		return "", nil
+	}
 	for i := 0; i < len(mss); i++ {
 		_, _, err := doc.Ref.Collection(r.subCollectionName).Add(ctx, mss[i])
 		if err != nil {

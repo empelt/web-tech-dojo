@@ -14,13 +14,18 @@ type AuthService interface {
 }
 
 type AnswerService interface {
-	GetPreviousAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error)
+	GetPreviousAnswers(ctx context.Context, uid string, qid int) (*models.Answer, error)
 	PostQuestionAnswer(ctx context.Context, uid string, qid int, message string) (*services.PostQuestionAnswerResponse, error)
 }
 
 type QuestionService interface {
-	GetQuestion(ctx context.Context, id int) (*services.GetQuestionResponse, error)
-	GetAllQuestions(ctx context.Context) ([]models.Question, error)
+	GetQuestion(ctx context.Context, uid string, qid int) (*services.GetQuestionResponse, error)
+	GetAllQuestions(ctx context.Context, uid string) ([]services.QuestionSummary, error)
+}
+
+type UserService interface {
+	AddBookmark(ctx context.Context, uid string, qid int) error
+	RemoveBookmark(ctx context.Context, uid string, qid int) error
 }
 
 type AnswerHandler struct {
@@ -29,5 +34,11 @@ type AnswerHandler struct {
 }
 
 type QuestionHandler struct {
+	authService     AuthService
 	questionService QuestionService
+}
+
+type BookmarkHandler struct {
+	authService     AuthService
+	bookmarkService UserService
 }

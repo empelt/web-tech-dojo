@@ -14,3 +14,8 @@ type AnswerRepository struct {
 	collectionName    string
 	subCollectionName string
 }
+
+type UserRepository struct {
+	firestore      *infrastructures.Firestore
+	collectionName string
+}

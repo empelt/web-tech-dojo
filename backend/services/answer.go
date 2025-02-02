@@ -13,27 +13,26 @@ type PostQuestionAnswerResponse struct {
 	Message string
 }
 
-func NewAnswerService(genaiClient GenaiClient, questionRepository QuestionRepository, answerRepository AnswerRepository) (*AnswerService, error) {
+func NewAnswerService(genaiClient GenaiClient, userRepository UserRepository, questionRepository QuestionRepository, answerRepository AnswerRepository) (*AnswerService, error) {
 	return &AnswerService{
 		genaiClient:        genaiClient,
+		userRepository:     userRepository,
 		questionRepository: questionRepository,
 		answerRepository:   answerRepository,
 	}, nil
 }
 
-func (s *AnswerService) GetPreviousAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error) {
+func (s *AnswerService) GetPreviousAnswers(ctx context.Context, uid string, qid int) (*models.Answer, error) {
 	// 1. 既存の解答データを取得
 	a, err := s.answerRepository.FindAnswer(ctx, uid, qid)
 	if err != nil {
 		if err == models.EntityNotFoundError {
 			// 既存の解答データがない場合は空データを作成
 			a = &models.Answer{
-				UserId:       uid,
-				QuestionId:   qid,
-				Progress:     0,
-				IsBookmarked: false,
-				Messages:     []models.Message{},
-				UpdatedAt:    time.Now(),
+				UserId:     uid,
+				QuestionId: qid,
+				Messages:   []models.Message{},
+				UpdatedAt:  time.Now(),
 			}
 		} else {
 			return nil, err
@@ -51,7 +50,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	}
 
 	// 2. 既存の解答データを取得
-	a, err := s.GetPreviousAnswer(ctx, uid, qid)
+	a, err := s.GetPreviousAnswers(ctx, uid, qid)
 	if err != nil {
 		return nil, err
 	}
@@ -65,22 +64,57 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 		return nil, err
 	}
 
-	// 5. 解答と返信を保存
-	id, err := s.answerRepository.BulkUpsertAnswer(ctx, &models.Answer{
-		UserId:       a.UserId,
-		QuestionId:   a.QuestionId,
-		Progress:     a.Progress,
-		IsBookmarked: a.IsBookmarked,
-		Messages:     []models.Message{},
-		UpdatedAt:    time.Now(),
+	// 5. データを保存
+	// 5.1 解答と返信を保存
+	if _, err := s.answerRepository.UpsertAnswer(ctx, &models.Answer{
+		UserId:     a.UserId,
+		QuestionId: a.QuestionId,
+		Messages:   []models.Message{},
+		UpdatedAt:  time.Now(),
 	}, []models.Message{
 		models.CreateMessage(message, true),
 		models.CreateMessage(reply, false),
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
-	fmt.Println("Answer saved. id:", id)
+
+	// 5.2 進行状況を保存
+	u, err := s.userRepository.GetUser(ctx, uid)
+	if err != nil {
+		if err == models.EntityNotFoundError {
+			u = &models.User{
+				UserId:      uid,
+				QuestionIds: []int{},
+				Progresses:  []models.Progress{},
+			}
+		} else {
+			return nil, err
+		}
+	}
+	hasProgress := false
+	needUpsert := true
+	for _, p := range u.Progresses {
+		if p.QuestionId == qid {
+			if p.Progress < 100 { // TODO: fix
+				p.Progress = 50 // TODO: fix
+			} else {
+				needUpsert = false
+			}
+			hasProgress = true
+			break
+		}
+	}
+	if !hasProgress {
+		u.Progresses = append(u.Progresses, models.Progress{
+			QuestionId: qid,
+			Progress:   50, //TODO: fix
+		})
+	}
+	if needUpsert {
+		if _, err := s.userRepository.UpsertUser(ctx, uid, u); err != nil {
+			return nil, err
+		}
+	}
 
 	return &PostQuestionAnswerResponse{
 		Message: reply,
