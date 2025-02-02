@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+import axios, { AxiosResponse } from 'axios'
 import { FaArrowUp } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router'
 
@@ -7,143 +8,119 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
+import { toast } from '@/hooks/use-toast'
 import { Message } from '@/types/message'
-
-const sampleMessages: Message[] = [
-  {
-    text: 'こんにちは！どのようなお悩みがありますか？',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'ネットワークの設定について教えてくださいネットワークの設定について教えてくださいネットワークの設定について教えてください',
-    sentByAI: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'ネットワークの設定についてですね。どのようなことについてお知りになりたいですか？ネットワークの設定についてですね。どのようなことについてお知りになりたいですか？',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'HTTPとHTTPSの違いはなんですか？',
-    sentByAI: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'HTTPとHTTPSの違いは暗号化の有無です。HTTPは暗号化されていないのに対して、HTTPSは暗号化されています。',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'ありがとうございます！',
-    sentByAI: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'どういたしまして！',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: '他に質問はありますか？',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'いいえ、大丈夫です。',
-    sentByAI: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'それでは、またのご利用をお待ちしております。',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'こんにちは！どのようなお悩みがありますか？',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'ネットワークの設定について教えてくださいネットワークの設定について教えてくださいネットワークの設定について教えてください',
-    sentByAI: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'ネットワークの設定についてですね。どのようなことについてお知りになりたいですか？ネットワークの設定についてですね。どのようなことについてお知りになりたいですか？',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'HTTPとHTTPSの違いはなんですか？',
-    sentByAI: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'HTTPとHTTPSの違いは暗号化の有無です。HTTPは暗号化されていないのに対して、HTTPSは暗号化されています。',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'ありがとうございます！',
-    sentByAI: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'どういたしまして！',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: '他に質問はありますか？',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'いいえ、大丈夫です。',
-    sentByAI: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    text: 'それでは、またのご利用をお待ちしております。',
-    sentByAI: true,
-    createdAt: new Date().toISOString(),
-  },
-]
+import { Question } from '@/types/question'
 
 const ChatPage = () => {
   const inputRef = useRef<HTMLDivElement>(null)
   const endOfMessagesRef = useRef<HTMLDivElement>(null)
 
   const [loading, setLoading] = useState<boolean>(false)
-  const [messages, setMessages] = useState<string[]>([])
+  const [waiting, setWaiting] = useState<boolean>(false)
+  const [content, setContent] = useState<string>('')
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState<string>('')
 
   const navigate = useNavigate()
   const { id } = useParams()
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  useEffect(() => {
+    let ignore = false
+    ;(async () => {
+      if (!id) {
+        return
+      }
+      setLoading(true)
+      // 2回実行されるのを防ぐ
+      // see https://react.dev/learn/synchronizing-with-effects#fetching-data
+
+      try {
+        // 問題のタイトルを取得
+        const {
+          data: questionResponse,
+          status: questionResponseStatus,
+        }: AxiosResponse<Question> = await axios.get(`/api/question/${id}`)
+        if (!ignore && questionResponseStatus === 200) {
+          setContent(questionResponse.content)
+        }
+
+        // 会話履歴を取得
+        const {
+          data: messagesResponse,
+          status: messagesResponseStatus,
+        }: AxiosResponse<{ messages: Message[] }> = await axios.get(
+          `/api/question/${id}/answer`,
+        )
+        if (!ignore && messagesResponseStatus === 200) {
+          setMessages(messagesResponse.messages)
+        }
+      } catch {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request.',
+        })
+      } finally {
+        setLoading(false)
+      }
+    })()
+    return () => {
+      ignore = true
+    }
+  }, [id])
+
   if (!id) {
     navigate('/questions')
     return null
   }
 
-  const handleSend = () => {
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-    }, 3000)
-    if (input.trim()) {
-      setMessages([...messages, input])
-      setInput('')
+  const handleSend = async () => {
+    if (!input || !input.trim()) {
+      return
     }
+    setWaiting(true)
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { text: input, sentByUser: true, createdAt: new Date().toISOString() },
+    ])
+    setInput('')
+    try {
+      const { data, status }: AxiosResponse<{ message: string }> =
+        await axios.post(`/api/question/${id}/answer`, {
+          message: input,
+        })
+      if (status === 200) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            text: data.message,
+            sentByUser: false,
+            createdAt: new Date().toISOString(),
+          },
+        ])
+      }
+    } catch {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      })
+    } finally {
+      setWaiting(false)
+    }
+    scrollToBottom()
   }
 
-  // TODO: バックエンドとの繋ぎこみ時に使う予定
-  //   const scrollToBottom = () => {
-  //     if (ref.current) {
-  //       ref.current.scrollIntoView({ behavior: 'smooth' })
-  //     }
-  //   }
+  const scrollToBottom = () => {
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   if (loading) {
     return (
@@ -181,13 +158,13 @@ const ChatPage = () => {
     <div className="container mx-auto pt-4 max-w-[800px]">
       <div className="w-full p-2 bg-gray-100 flex justify-start rounded-lg items-center">
         <div className="p-2 bg-white rounded-lg mr-2">Q{id}</div>
-        <h1>HTTPとHTTPSの違いはなんですか？</h1>
+        <h1>{content}</h1>
       </div>
       <div
         className="flex-1 overflow-y-auto p-4"
         style={{ marginBottom: `${inputRef.current?.offsetHeight ?? 120}px` }}>
-        {sampleMessages.map((message, index) => {
-          if (message.sentByAI) {
+        {messages.map((message, index) => {
+          if (!message.sentByUser) {
             return (
               <div className="mb-2 w-full text-left flex" key={index}>
                 <Avatar>
@@ -231,9 +208,15 @@ const ChatPage = () => {
             placeholder="メッセージを入力"
             value={input}
           />
-          <Button className="ml-2 rounded-full h-8 w-8" onClick={handleSend}>
-            <FaArrowUp />
-          </Button>
+          {waiting ? (
+            <Button className="ml-2 rounded-full h-8 w-8" disabled>
+              <FaArrowUp />
+            </Button>
+          ) : (
+            <Button className="ml-2 rounded-full h-8 w-8" onClick={handleSend}>
+              <FaArrowUp />
+            </Button>
+          )}
         </div>
         <p className="text-sm text-gray-500 text-center mt-2">
           AIの回答は必ずしも正しいとは限りません。重要な情報は確認するようにしてください。

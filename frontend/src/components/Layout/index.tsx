@@ -5,7 +5,7 @@ import { Footer } from '../Footer'
 import { Header } from '../Header'
 import LoadingScreen from '../LoadingScreen'
 
-import { auth } from '@/libs/firebase'
+import { auth } from '@/lib/firebase'
 
 type Props = {
   loginGuard?: boolean

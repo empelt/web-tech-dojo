@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router'
 
-import { auth } from '@/libs/firebase'
+import { auth } from '@/lib/firebase'
 import SignupForm from '@/pages/signup/components/form'
 
 const SignupPage = () => {

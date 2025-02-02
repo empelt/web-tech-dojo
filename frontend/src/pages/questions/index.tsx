@@ -42,7 +42,7 @@ const QuestionsPage = () => {
     // see https://react.dev/learn/synchronizing-with-effects#fetching-data
     let ignore = false
     axios
-      .get(import.meta.env.VITE_BACKEND_URL + '/api/question')
+      .get('/api/question')
       .then((res: AxiosResponse<Question[]>) => {
         const { data, status } = res
         if (!ignore && status === 200) {
