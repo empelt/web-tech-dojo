@@ -39,7 +39,15 @@ func (s *QuestionService) GetQuestion(ctx context.Context, uid string, qid int) 
 	}
 	u, err := s.userService.userRepository.GetUser(ctx, uid)
 	if err != nil {
-		return nil, err
+		if err == models.EntityNotFoundError {
+			u = &models.User{
+				UserId:      uid,
+				QuestionIds: []int{},
+				Progresses:  []models.Progress{},
+			}
+		} else {
+			return nil, err
+		}
 	}
 
 	return &GetQuestionResponse{
