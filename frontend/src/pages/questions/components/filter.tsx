@@ -131,16 +131,6 @@ const Filter = ({
                     onSelect={() => column?.setFilterValue(undefined)}>
                     Clear filters
                   </CommandItem>
-                  <CommandItem
-                    className="justify-center text-center"
-                    onSelect={() => {
-                      console.log(
-                        'Filters applied:',
-                        Array.from(selectedValues),
-                      )
-                    }}>
-                    Apply
-                  </CommandItem>
                 </CommandGroup>
               </>
             )}
