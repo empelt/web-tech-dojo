@@ -66,14 +66,14 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 
 	// 5. データを保存
 	// 5.1 解答と返信を保存
+	m := a.Messages
+	m = append(m, models.CreateMessage(message, true))
+	m = append(m, models.CreateMessage(reply, false))
 	if _, err := s.answerRepository.UpsertAnswer(ctx, &models.Answer{
 		UserId:     a.UserId,
 		QuestionId: a.QuestionId,
-		Messages:   []models.Message{},
+		Messages:   m,
 		UpdatedAt:  time.Now(),
-	}, []models.Message{
-		models.CreateMessage(message, true),
-		models.CreateMessage(reply, false),
 	}); err != nil {
 		return nil, err
 	}

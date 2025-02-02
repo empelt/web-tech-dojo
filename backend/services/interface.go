@@ -20,7 +20,7 @@ type QuestionRepository interface {
 
 type AnswerRepository interface {
 	FindAnswer(ctx context.Context, uid string, qid int) (*models.Answer, error)
-	UpsertAnswer(ctx context.Context, answer *models.Answer, newMessages []models.Message) (string, error)
+	UpsertAnswer(ctx context.Context, answer *models.Answer) (string, error)
 }
 
 type UserRepository interface {
