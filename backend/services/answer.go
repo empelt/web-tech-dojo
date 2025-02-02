@@ -13,7 +13,7 @@ type PostQuestionAnswerResponse struct {
 	Message string
 }
 
-func NewAnswerService(genaiClient GenaiClient, userRepository UserRepository, questionRepository QuestionRepository, answerRepository AnswerRepository) (*AnswerService, error) {
+func NewAnswerService(genaiClient GenaiClient, questionRepository QuestionRepository, answerRepository AnswerRepository) (*AnswerService, error) {
 	return &AnswerService{
 		genaiClient:        genaiClient,
 		userRepository:     userRepository,
@@ -76,6 +76,44 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 		UpdatedAt:  time.Now(),
 	}); err != nil {
 		return nil, err
+	}
+
+	// 5.2 進行状況を保存
+	u, err := s.userRepository.GetUser(ctx, uid)
+	if err != nil {
+		if err == models.EntityNotFoundError {
+			u = &models.User{
+				UserId:      uid,
+				QuestionIds: []int{},
+				Progresses:  []models.Progress{},
+			}
+		} else {
+			return nil, err
+		}
+	}
+	hasProgress := false
+	needUpsert := true
+	for _, p := range u.Progresses {
+		if p.QuestionId == qid {
+			if p.Progress < 100 { // TODO: fix
+				p.Progress = 50 // TODO: fix
+			} else {
+				needUpsert = false
+			}
+			hasProgress = true
+			break
+		}
+	}
+	if !hasProgress {
+		u.Progresses = append(u.Progresses, models.Progress{
+			QuestionId: qid,
+			Progress:   50, //TODO: fix
+		})
+	}
+	if needUpsert {
+		if _, err := s.userRepository.UpsertUser(ctx, uid, u); err != nil {
+			return nil, err
+		}
 	}
 
 	// 5.2 進行状況を保存
