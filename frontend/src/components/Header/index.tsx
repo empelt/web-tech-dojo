@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router'
 import DropdownAvatar from '../Header/DropdownAvatar'
 
 import { Button } from '@/components/ui/button'
-import { auth } from '@/libs/firebase'
+import { auth } from '@/lib/firebase'
 
 export const Header = () => {
   const [user] = useAuthState(auth)

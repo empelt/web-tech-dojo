@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/hooks/use-toast'
-import { auth } from '@/libs/firebase'
+import { auth } from '@/lib/firebase'
 
 const formSchema = z.object({
   email: z

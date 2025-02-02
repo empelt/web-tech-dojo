@@ -1,10 +1,12 @@
 import { StrictMode } from 'react'
 
+import axios from 'axios'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router'
 
 import App from './App'
 import { Toaster } from './components/ui/toaster'
+import { auth } from './lib/firebase'
 import ChatPage from './pages/chat'
 import ContactPage from './pages/contact'
 import LoginPage from './pages/login'
@@ -22,6 +24,21 @@ const root = document.getElementById('root')
 if (!root) {
   throw new Error('Root element not found')
 }
+
+axios.interceptors.request.use(
+  (config) => {
+    return (
+      auth.currentUser?.getIdToken().then((token) => {
+        config.baseURL = import.meta.env.VITE_BACKEND_URL
+        config.headers['Authorization'] = `Bearer ${token}`
+        return config
+      }) ?? Promise.resolve(config)
+    )
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)
 
 ReactDOM.createRoot(root).render(
   <StrictMode>
