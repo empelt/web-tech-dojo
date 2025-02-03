@@ -24,7 +24,7 @@ import { Question } from '@/types/question'
 
 type Props = {
   loading: boolean
-  onBookmark: (id: string) => void
+  onBookmark: (id: string, isBookmarked: boolean) => void
   questions: Question[]
 }
 
@@ -94,8 +94,10 @@ const QuestionsTable = ({ questions, onBookmark, loading }: Props) => {
             <TableRow key={index}>
               <TableCell className="text-center">
                 <button
-                  className="transparent"
-                  onClick={() => onBookmark(question.id)}>
+                  className="transparent mt-1"
+                  onClick={() =>
+                    onBookmark(question.id, question.isBookmarked)
+                  }>
                   {question.isBookmarked ? (
                     <FaHeart
                       className="text-red-500 cursor-pointer"
