@@ -31,12 +31,10 @@ const Layout = ({
   }
 
   return (
-    <div className="flex flex-col justify-between min-h-screen">
-      <div>
+    <div>
+      <div className= { showHeader ? 'mx-auto h-[100vh] grid grid-rows-[auto_1fr]' : '' }>
         {showHeader && <Header />}
-        <div className={showHeader ? 'mt-16' : ''}>
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
       {showFooter && <Footer />}
     </div>

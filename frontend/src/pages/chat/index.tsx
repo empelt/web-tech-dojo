@@ -124,18 +124,22 @@ const ChatPage = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto pt-4 max-w-[800px]">
-        <Skeleton className="h-12 w-full rounded-lg" />
+      <div style={{
+        display: 'grid',
+        gridTemplateRows: 'auto 1fr auto',
+        overflow: 'hidden'
+      }}>
+        <Skeleton className="mt-4 h-12 w-full rounded-lg" />
         <div className="flex-1 overflow-y-auto p-4">
-          <div className="mb-4 w-full text-left flex">
+          <div className="mb-4 w-full flex justify-end">
+            <Skeleton className="h-10 w-full rounded-xl max-w-[80%]" />
+          </div>
+          <div className="w-full text-left flex">
             <Skeleton className="h-10 w-10 rounded-full" />
             <Skeleton className="h-10 inline-block ml-4 rounded-xl w-[80%]" />
           </div>
-          <div className="w-full flex justify-end">
-            <Skeleton className="h-10 w-full rounded-xl max-w-[80%]" />
-          </div>
         </div>
-        <div className="container mx-auto fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-white pb-2 max-w-[800px]">
+        <div className="mx-auto w-full bg-white pb-2 max-w-[800px]">
           <div className="flex p-4 shadow-md rounded-lg bg-gray-100 items-end cursor-text">
             <Textarea
               className="resize-none max-h-32 border-none shadow-none focus-visible:ring-0"
@@ -155,18 +159,16 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="container mx-auto pt-4 max-w-[800px]">
-      <div className="w-full p-2 bg-gray-100 flex justify-start rounded-lg items-center">
+    <div className='grid grid-rows-[auto_1fr_auto] overflow-hidden'>
+      <div className="w-full mt-4 p-2 mx-auto bg-gray-100 flex justify-start rounded-lg items-center max-w-[800px]">
         <div className="p-2 bg-white rounded-lg mr-2">Q{id}</div>
         <h1>{content}</h1>
       </div>
-      <div
-        className="flex-1 overflow-y-auto p-4"
-        style={{ marginBottom: `${inputRef.current?.offsetHeight ?? 120}px` }}>
+      <div className="hidden-scrollbar flex-1 overflow-y-auto p-4">
         {messages.map((message, index) => {
           if (!message.sentByUser) {
             return (
-              <div className="mb-2 w-full text-left flex" key={index}>
+              <div className="mx-auto mb-2 w-full text-left flex max-w-[800px]" key={index}>
                 <Avatar>
                   <AvatarImage
                     alt="avatar image"
@@ -180,7 +182,7 @@ const ChatPage = () => {
             )
           } else {
             return (
-              <div className="mb-2 w-full text-right" key={index}>
+              <div className="mx-auto mb-2 w-full text-right max-w-[800px]" key={index}>
                 <div className="inline-block px-3 py-2 bg-gray-200 rounded-xl text-left max-w-[80%]">
                   {message.text}
                 </div>
@@ -191,7 +193,7 @@ const ChatPage = () => {
         <div ref={endOfMessagesRef} />
       </div>
       <div
-        className="container mx-auto fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-white pb-2 max-w-[800px]"
+        className="mx-auto w-full bg-white pb-2 max-w-[800px]"
         ref={inputRef}>
         <div
           className="flex p-4 shadow-md rounded-lg bg-gray-100 items-end cursor-text"
