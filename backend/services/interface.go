@@ -10,7 +10,7 @@ import (
 //go:generate mockgen -source=interface.go -destination=mock/interface.go -package=mock
 
 type GenaiClient interface {
-	GenerateContentFromText(ctx context.Context, message string) (string, error)
+	GenerateContentFromText(ctx context.Context, message string) (*infrastructures.GenerateContentResponse, error)
 }
 
 type QuestionRepository interface {

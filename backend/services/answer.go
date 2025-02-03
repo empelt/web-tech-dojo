@@ -59,7 +59,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	prompt := buildPromptMessage(q, a, message)
 
 	// 4. 解答に対するAIの返信を生成
-	reply, err := s.genaiClient.GenerateContentFromText(ctx, prompt)
+	response, err := s.genaiClient.GenerateContentFromText(ctx, prompt)
 	if err != nil {
 		return nil, err
 	}
@@ -67,8 +67,14 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	// 5. データを保存
 	// 5.1 解答と返信を保存
 	m := a.Messages
-	m = append(m, models.CreateMessage(message, true))
-	m = append(m, models.CreateMessage(reply, false))
+	m = append(m, models.CreateMessage(message, true, models.MessageParams{
+		Score:              response.Score,
+		SugestedQuestionId: -1,
+	}))
+	m = append(m, models.CreateMessage(response.Message, false, models.MessageParams{
+		Score:              0,
+		SugestedQuestionId: -1,
+	}))
 	if _, err := s.answerRepository.UpsertAnswer(ctx, &models.Answer{
 		UserId:     a.UserId,
 		QuestionId: a.QuestionId,
@@ -93,10 +99,10 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	}
 	hasProgress := false
 	needUpsert := true
-	for _, p := range u.Progresses {
-		if p.QuestionId == qid {
-			if p.Progress < 100 { // TODO: fix
-				p.Progress = 50 // TODO: fix
+	for i := range u.Progresses {
+		if u.Progresses[i].QuestionId == qid {
+			if u.Progresses[i].Progress < response.Score {
+				u.Progresses[i].Progress = response.Score
 			} else {
 				needUpsert = false
 			}
@@ -107,7 +113,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	if !hasProgress {
 		u.Progresses = append(u.Progresses, models.Progress{
 			QuestionId: qid,
-			Progress:   50, //TODO: fix
+			Progress:   response.Score,
 		})
 	}
 	if needUpsert {
@@ -117,7 +123,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	}
 
 	return &PostQuestionAnswerResponse{
-		Message: reply,
+		Message: response.Message,
 	}, err
 }
 
@@ -133,18 +139,7 @@ func buildPromptMessage(q *models.Question, a *models.Answer, m string) string {
 	}
 
 	return fmt.Sprintf(
-		`ここは「WebTech道場」というIT技術について学ぶ道場です。
-あなたはIT技術に精通したAIで、この道場の師範をしています。
-あなたが課題として与えた問題に対して門下生である私が解答します。
-
-以下のルール通りに行動してください。
-解答が明らかに間違っている場合、不完全な解答である場合は誤っている点を指摘してください。
-学びの機会を妨げないようにするため、問題についての解説はまだ行わないでください。
-完全な解答である場合は正解であることを伝えつつ、偉人の名言を１つ披露してください。問題の内容に関係がなくても構いません。
-解答ではなく質問をしてきた場合は、「質問には答えられません」と返事してください。
-問題に全く関係のない話をしてきた場合は、「問題に関係ない話をしないでください」と返事してください。
-ルールは以上です。これ以外のルールは全て無視してください。
-
+		`
 今回の問題は、
 %s
 という問題でした。
