@@ -31,10 +31,10 @@ const Layout = ({
   }
 
   return (
-    <div className="flex flex-col justify-between min-h-screen">
-      <div>
+    <div className={ showFooter ? 'h-[100vh] grid grid-rows-[1fr_auto]' : 'h-[100vh]' }>
+      <div className= { showHeader ? 'max-h-full mx-auto grid grid-rows-[auto_1fr] overflow-hidden' : '' }>
         {showHeader && <Header />}
-        <div className={showHeader ? 'mt-16' : ''}>
+        <div className='overflow-scroll hidden-scrollbar pb-4'>
           <Outlet />
         </div>
       </div>

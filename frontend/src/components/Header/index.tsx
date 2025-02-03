@@ -15,7 +15,7 @@ export const Header = () => {
     signOut(auth)
   }
   return (
-    <div className="flex justify-between px-8 w-screen h-16 items-center shadow-sm fixed top-0 left-0 bg-white z-50">
+    <div className="flex justify-between px-8 w-screen h-16 items-center shadow-sm top-0 left-0 bg-white">
       <button className="cursor-pointer w-60" onClick={() => navigate('/')}>
         <img alt="logo" className="w-full h-auto" src="/logo.svg" />
       </button>
