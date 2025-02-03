@@ -5,6 +5,7 @@ import axios, { AxiosResponse } from 'axios'
 import QuestionsTable from './components/table'
 import Toolbar from './components/toolbar'
 
+import { toast } from '@/hooks/use-toast'
 import { Question } from '@/types/question'
 
 const QuestionsPage = () => {
@@ -61,14 +62,41 @@ const QuestionsPage = () => {
     }
   }, [])
 
-  const onBookmark = (id: string) => {
-    setQuestions((prevQuestions) =>
-      prevQuestions.map((question) =>
-        question.id === id
-          ? { ...question, isBookmarked: !question.isBookmarked }
-          : question,
-      ),
-    )
+  const onBookmark = async (id: string, isBookmarked: boolean) => {
+    try {
+      if (isBookmarked) {
+        const { status }: AxiosResponse<{ message: string }> =
+          await axios.delete(`/api/bookmark/question/${id}`)
+        if (status === 200) {
+          setQuestions((prevQuestions) =>
+            prevQuestions.map((question) =>
+              question.id === id
+                ? { ...question, isBookmarked: !isBookmarked }
+                : question,
+            ),
+          )
+        }
+      } else {
+        const { status }: AxiosResponse<{ message: string }> = await axios.post(
+          `/api/bookmark/question/${id}`,
+        )
+        if (status === 200) {
+          setQuestions((prevQuestions) =>
+            prevQuestions.map((question) =>
+              question.id === id
+                ? { ...question, isBookmarked: !isBookmarked }
+                : question,
+            ),
+          )
+        }
+      }
+    } catch {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      })
+    }
   }
 
   useEffect(() => {

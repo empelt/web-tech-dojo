@@ -41,6 +41,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (emailErr || googleErr) {
+      console.log(emailErr, googleErr)
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
