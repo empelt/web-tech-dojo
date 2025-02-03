@@ -31,10 +31,12 @@ const Layout = ({
   }
 
   return (
-    <div>
-      <div className= { showHeader ? 'mx-auto h-[100vh] grid grid-rows-[auto_1fr]' : '' }>
+    <div className={ showFooter ? 'h-[100vh] grid grid-rows-[1fr_auto]' : 'h-[100vh]' }>
+      <div className= { showHeader ? 'max-h-full mx-auto grid grid-rows-[auto_1fr] overflow-hidden' : '' }>
         {showHeader && <Header />}
-        <Outlet />
+        <div className='overflow-scroll hidden-scrollbar pb-4'>
+          <Outlet />
+        </div>
       </div>
       {showFooter && <Footer />}
     </div>

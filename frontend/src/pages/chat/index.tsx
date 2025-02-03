@@ -124,11 +124,7 @@ const ChatPage = () => {
 
   if (loading) {
     return (
-      <div style={{
-        display: 'grid',
-        gridTemplateRows: 'auto 1fr auto',
-        overflow: 'hidden'
-      }}>
+      <div className='grid grid-rows-[auto_1fr_auto] overflow-hidden h-full'>
         <Skeleton className="mt-4 h-12 w-full rounded-lg" />
         <div className="flex-1 overflow-y-auto p-4">
           <div className="mb-4 w-full flex justify-end">
@@ -159,7 +155,7 @@ const ChatPage = () => {
   }
 
   return (
-    <div className='grid grid-rows-[auto_1fr_auto] overflow-hidden'>
+    <div className='grid grid-rows-[auto_1fr_auto] overflow-hidden h-full'>
       <div className="w-full mt-4 p-2 mx-auto bg-gray-100 flex justify-start rounded-lg items-center max-w-[800px]">
         <div className="p-2 bg-white rounded-lg mr-2">Q{id}</div>
         <h1>{content}</h1>
