@@ -12,7 +12,9 @@ import (
 )
 
 type PostQuestionAnswerResponse struct {
-	Message string
+	Message             string `json:"message"`
+	Score               int    `json:"score"`
+	SuggestedQuestionId int    `json:"suggested_question_id"`
 }
 
 type AnswerService struct {
@@ -103,7 +105,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	m := a.Messages
 	m = append(m, models.CreateMessage(message, true, models.MessageParams{
 		Score:              response.Score,
-		SugestedQuestionId: -1,
+		SugestedQuestionId: response.SuggestedQuestionId,
 	}))
 	m = append(m, models.CreateMessage(response.Message, false, models.MessageParams{
 		Score:              0,
@@ -157,7 +159,9 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	}
 
 	return &PostQuestionAnswerResponse{
-		Message: response.Message,
+		Message:             response.Message,
+		Score:               response.Score,
+		SuggestedQuestionId: response.SuggestedQuestionId,
 	}, err
 }
 

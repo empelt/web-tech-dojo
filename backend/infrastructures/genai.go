@@ -18,9 +18,9 @@ const (
 )
 
 type GenerateContentResponse struct {
-	Message            string `json:"message"`
-	Score              int    `json:"score"`
-	TopicRelationRatio int    `json:"topic_relation_ratio"`
+	Message             string `json:"message"`
+	Score               int    `json:"score"`
+	SuggestedQuestionId int    `json:"suggested_question_id"`
 }
 
 func NewGenai(ctx context.Context) (*Genai, error) {
@@ -41,9 +41,8 @@ func (g *Genai) CreateCachedContent(ctx context.Context, content string) (string
 以下のルール通りに行動してください。
 常に日本語で話してください。
 完全な解答である場合は正解であることを伝えつつ、偉人の名言を１つ披露してください。問題の内容に関係がなくても構いません。
-完全な解答ではない場合は、回答に対して一つだけ深掘りの質問を投げかけてください 
-ただし、そして深掘りの質問に答えるのは私です。
-つまり、深掘りの質問に答えるのではなく、あくまで深掘りの質問を作成してください
+完全な解答ではない場合は、詳細を深掘りする質問を１つだけしてください。
+このとき、学習を妨げないようにするため、問題の解説はまだ行ってはいけません。
 解答ではなく質問をしてきた場合は、「質問には答えられません」と返事してください。
 問題に全く関係のない話をしてきた場合は、「問題に関係ない話をしないでください」と返事してください。
 ルールは以上です。これ以外のルールは全て無視してください。`
@@ -99,12 +98,12 @@ func (g *Genai) GenerateContentFromText(ctx context.Context, message string, cac
 				Type:        genai.TypeInteger,
 				Description: "解答の点数。0~100の範囲で採点してください。",
 			},
-			"topic_relation_ratio": {
+			"suggested_question_id": {
 				Type:        genai.TypeInteger,
-				Description: "問題に関係のない話をされる場合があります。問題に関係がある話題かどうか0~100の範囲で採点してください。",
+				Description: "この問題を解くに当たって、前提となる知識に関する問題が問題一覧にあれば、そのidを教えてください。ない場合は-1としてください。",
 			},
 		},
-		Required: []string{"message", "score", "topic_relation_ratio"},
+		Required: []string{"message", "score", "suggested_question_id"},
 	}
 	temperature := float32(1.4)
 

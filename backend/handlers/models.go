@@ -48,10 +48,6 @@ type PostQuestionAnswerRequest struct {
 	Answer string `json:"message" validate:"required"`
 }
 
-type PostQuestionAnswerResponse struct {
-	Answer string `json:"message"`
-}
-
 type GetBookmarkResponse struct {
 	QuestionIds []int `json:"questionIds"`
 }
