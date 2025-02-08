@@ -23,7 +23,6 @@ import { cn } from '@/lib/utils'
 
 type Props = {
   options: {
-    icon?: React.ComponentType<{ className?: string }>
     label: string
     value: string
   }[]
@@ -114,9 +113,6 @@ const Filter = ({
                       )}>
                       <Check />
                     </div>
-                    {option.icon && (
-                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                    )}
                     <span>{option.label}</span>
                   </CommandItem>
                 )

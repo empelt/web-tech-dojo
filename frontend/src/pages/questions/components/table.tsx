@@ -124,7 +124,7 @@ const QuestionsTable = ({ questions, onBookmark, loading }: Props) => {
                 <div className="flex w-[100px] items-center">
                   {question.tags.map((tag) => (
                     <span
-                      className="text-xs bg-gray-200 px-2 py-1 mr-2 rounded-full"
+                      className="text-xs bg-gray-200 px-2 py-1 mr-2 rounded-full text-nowrap"
                       key={tag}>
                       {tag}
                     </span>

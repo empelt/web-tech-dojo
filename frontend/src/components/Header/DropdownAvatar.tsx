@@ -4,7 +4,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 
 type Props = {
@@ -27,9 +26,9 @@ const DropdownAvatar = ({ imgSrc, fallback, logout }: Props) => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>DashBoard</DropdownMenuItem>
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuItem>DashBoard</DropdownMenuItem> */}
+        {/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
+        {/* <DropdownMenuSeparator /> */}
         <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
