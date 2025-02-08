@@ -21,8 +21,9 @@ func main() {
 	}
 
 	e := echo.New()
+	AllowOrigins := os.Getenv("ALLOW_ORIGINS")
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"*"},
+		AllowOrigins:     []string{AllowOrigins},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE"},
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAuthorization},
 		AllowCredentials: true,
