@@ -121,7 +121,7 @@ const QuestionsTable = ({ questions, onBookmark, loading }: Props) => {
                 </Button>
               </TableCell>
               <TableCell>
-                <div className="flex w-[100px] items-center">
+                <div className="flex items-center">
                   {question.tags.map((tag) => (
                     <span
                       className="text-xs bg-gray-200 px-2 py-1 mr-2 rounded-full text-nowrap"
@@ -151,8 +151,11 @@ const QuestionsTable = ({ questions, onBookmark, loading }: Props) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem>Delete Data</DropdownMenuItem>
-                    <DropdownMenuItem>問題を報告</DropdownMenuItem>
+                    {/* TODO: 会話データの削除機能を実装する */}
+                    {/* <DropdownMenuItem>会話データを削除する</DropdownMenuItem> */}
+                    <DropdownMenuItem onClick={() => navigate('/contact')}>
+                      問題を報告
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

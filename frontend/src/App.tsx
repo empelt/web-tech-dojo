@@ -8,7 +8,11 @@ const App = () => {
 
   return (
     <div className="container mx-auto text-center pt-32">
-      <h1 className="text-7xl">WebTech 道場</h1>
+      <img
+        alt="logo"
+        className="mx-auto w-10/12 max-w-3xl"
+        src="/logoText.svg"
+      />
       <div className="flex flex-col items-center mt-8 gap-2">
         <p>
           WebTech
