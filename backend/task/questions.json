@@ -1,18 +1,232 @@
 {
   "questions": [
     {
+      "id": 1,
+      "title": "HTTPリクエストの主なメソッドの違い",
+      "content": "HTTPリクエストの主なメソッド（GET、POST、PUT、DELETE）の違いを説明してください。それぞれの使用例を挙げてください。",
+      "tags": ["Web開発", "HTTP", "リクエストメソッド"]
+    },
+    {
       "id": 2,
-      "title": "How to implement API authentication",
-      "content": "I'm building a REST API and need secure authentication. What are the best practices?",
-      "tags": ["api", "security", "authentication"],
-      "createdAt": "2024-01-20T10:30:00Z"
+      "title": "RESTとGraphQLの違い",
+      "content": "RESTとGraphQLの違いを述べてください。それぞれの利点と欠点についても説明してください。",
+      "tags": ["API", "REST", "GraphQL"]
     },
     {
       "id": 3,
-      "title": "Docker container networking",
-      "content": "How do I setup communication between multiple Docker containers?",
-      "tags": ["docker", "networking", "containers"],
-      "createdAt": "2024-01-21T15:45:00Z"
+      "title": "HTTPSの仕組みと利点",
+      "content": "HTTPSの仕組みと、それを使用する利点について説明してください。",
+      "tags": ["Web開発", "HTTPS", "セキュリティ"]
+    },
+    {
+      "id": 4,
+      "title": "CORSとは何か",
+      "content": "CORS（Cross-Origin Resource Sharing）とは何ですか？また、その重要性について説明してください。",
+      "tags": ["Web開発", "CORS", "セキュリティ"]
+    },
+    {
+      "id": 5,
+      "title": "CSRとSSRの違い",
+      "content": "クライアントサイドレンダリング（CSR）とサーバーサイドレンダリング（SSR）の違いを説明してください。",
+      "tags": ["フロントエンド", "レンダリング", "Web開発"]
+    },
+    {
+      "id": 6,
+      "title": "ReactとVue.jsの違い",
+      "content": "ReactとVue.jsの違いを説明してください。それぞれの特徴や用途について述べてください。",
+      "tags": ["フロントエンド", "React", "Vue.js"]
+    },
+    {
+      "id": 7,
+      "title": "仮想DOMとは何か",
+      "content": "仮想DOM（Virtual DOM）とは何ですか？その仕組みや利点について説明してください。",
+      "tags": ["フロントエンド", "Virtual DOM", "React"]
+    },
+    {
+      "id": 8,
+      "title": "Web Componentsの利点と欠点",
+      "content": "Web Componentsの利点と欠点を説明してください。また、どのような場面で使用されるかを述べてください。",
+      "tags": ["フロントエンド", "Web Components", "コンポーネント"]
+    },
+    {
+      "id": 9,
+      "title": "ブラウザのレンダリングプロセス",
+      "content": "ブラウザのレンダリングプロセスについて説明してください。HTML、CSS、JavaScriptがどのように処理されるかを述べてください。",
+      "tags": ["フロントエンド", "ブラウザ", "レンダリング"]
+    },
+    {
+      "id": 10,
+      "title": "JavaScriptのイベントループの仕組み",
+      "content": "JavaScriptのイベントループの仕組みを説明してください。同期処理と非同期処理の違いについても述べてください。",
+      "tags": ["JavaScript", "イベントループ", "非同期処理"]
+    },
+    {
+      "id": 11,
+      "title": "CSS GridとFlexboxの違い",
+      "content": "CSS GridとFlexboxの違いを述べてください。それぞれの用途や利点についても説明してください。",
+      "tags": ["フロントエンド", "CSS", "レイアウト"]
+    },
+    {
+      "id": 12,
+      "title": "Node.jsの特徴と用途",
+      "content": "Node.jsの特徴と主な用途について説明してください。また、その利点についても述べてください。",
+      "tags": ["バックエンド", "Node.js", "Javascript"]
+    },
+    {
+      "id": 13,
+      "title": "WebSocketの概要と利点",
+      "content": "WebSocketとは何ですか？また、その利点と使用例について述べてください。",
+      "tags": ["バックエンド", "WebSocket", "リアルタイム"]
+    },
+    {
+      "id": 14,
+      "title": "セッションとJWTの違い",
+      "content": "セッションとJWT（JSON Web Token）の違いを説明してください。それぞれのメリットとデメリットについても述べてください。",
+      "tags": ["バックエンド", "認証", "JWT"]
+    },
+    {
+      "id": 15,
+      "title": "データベース接続プールの仕組み",
+      "content": "データベース接続プール（Connection Pooling）の仕組みとその利点を説明してください。",
+      "tags": ["バックエンド", "データベース", "パフォーマンス"]
+    },
+    {
+      "id": 16,
+      "title": "キャッシュの利点と用途",
+      "content": "キャッシュ（例: Redis、Memcached）の利点を述べてください。また、どのような場面で使用されるかを説明してください。",
+      "tags": ["バックエンド", "キャッシュ", "パフォーマンス"]
+    },
+    {
+      "id": 17,
+      "title": "Middlewareとは何か",
+      "content": "Middleware（ミドルウェア）とは何ですか？具体例を挙げてその役割を説明してください。",
+      "tags": ["バックエンド", "ミドルウェア", "Web開発"]
+    },
+    {
+      "id": 18,
+      "title": "RDBMSとNoSQLの違い",
+      "content": "RDBMS（リレーショナルデータベース）とNoSQLデータベースの違いを説明してください。それぞれの用途についても述べてください。",
+      "tags": ["データベース", "RDBMS", "NoSQL"]
+    },
+    {
+      "id": 19,
+      "title": "インデックスの役割と利点",
+      "content": "インデックスの役割と利点を説明してください。また、その使用時の注意点も述べてください。",
+      "tags": ["データベース", "インデックス", "パフォーマンス"]
+    },
+    {
+      "id": 20,
+      "title": "トランザクションのACID特性",
+      "content": "トランザクションのACID特性について説明してください。それぞれの特性がどのようにデータベースに影響を与えるか述べてください。",
+      "tags": ["データベース", "トランザクション", "ACID"]
+    },
+    {
+      "id": 21,
+      "title": "データの正規化と非正規化の違い",
+      "content": "データの正規化と非正規化の違いを述べてください。また、それぞれの利点と欠点を説明してください。",
+      "tags": ["データベース", "正規化", "非正規化"]
+    },
+    {
+      "id": 22,
+      "title": "MongoDBの利点と用途",
+      "content": "MongoDBの利点と主な用途を説明してください。その特徴についても述べてください。",
+      "tags": ["データベース", "MongoDB", "NoSQL"]
+    },
+    {
+      "id": 23,
+      "title": "CSRFとは何か",
+      "content": "CSRF（Cross-Site Request Forgery）とは何ですか？その対策についても説明してください。",
+      "tags": ["セキュリティ", "CSRF", "Web開発"]
+    },
+    {
+      "id": 24,
+      "title": "XSSとは何か",
+      "content": "XSS（Cross-Site Scripting）とは何ですか？その対策を述べてください。",
+      "tags": ["セキュリティ", "XSS", "Web開発"]
+    },
+    {
+      "id": 25,
+      "title": "SQLインジェクションの防止方法",
+      "content": "SQLインジェクションとは何ですか？また、その防止方法について説明してください。",
+      "tags": ["セキュリティ", "SQLインジェクション", "データベース"]
+    },
+    {
+      "id": 26,
+      "title": "HTTPSで使われるTLS/SSLの仕組み",
+      "content": "HTTPSで使われるTLS/SSLの仕組みを説明してください。その利点についても述べてください。",
+      "tags": ["セキュリティ", "HTTPS", "SSL"]
+    },
+    {
+      "id": 27,
+      "title": "CookieのHttpOnly属性とSecure属性の違い",
+      "content": "CookieのHttpOnly属性とSecure属性の違いを説明してください。それぞれの用途についても述べてください。",
+      "tags": ["セキュリティ", "Cookie", "属性"]
+    },
+    {
+      "id": 28,
+      "title": "CI/CDパイプラインとは何か",
+      "content": "CI/CDパイプラインとは何ですか？その利点について説明してください。",
+      "tags": ["デプロイ", "CI/CD", "インフラ"]
+    },
+    {
+      "id": 29,
+      "title": "コンテナ技術とは何か",
+      "content": "コンテナ技術（例: Docker）とは何ですか？その利点と用途について述べてください。",
+      "tags": ["インフラ", "Docker", "コンテナ"]
+    },
+    {
+      "id": 30,
+      "title": "Webサーバーの役割",
+      "content": "Webサーバー（例: Nginx、Apache）の役割を説明してください。その使用例についても述べてください。",
+      "tags": ["インフラ", "Webサーバー", "Nginx"]
+    },
+    {
+      "id": 31,
+      "title": "負荷分散の仕組み",
+      "content": "負荷分散（Load Balancing）の仕組みを説明してください。また、その利点について述べてください。",
+      "tags": ["インフラ", "負荷分散", "スケーリング"]
+    },
+    {
+      "id": 32,
+      "title": "CDNの利点",
+      "content": "CDN（Content Delivery Network）の利点を説明してください。また、その仕組みについても述べてください。",
+      "tags": ["インフラ", "CDN", "パフォーマンス"]
+    },
+    {
+      "id": 33,
+      "title": "Infrastructure as Codeとは何か",
+      "content": "Infrastructure as Code（IaC）とは何ですか？その利点を述べてください。",
+      "tags": ["インフラ", "IaC", "自動化"]
+    },
+    {
+      "id": 34,
+      "title": "Webページのパフォーマンス向上",
+      "content": "Webページのパフォーマンスを向上させる方法を5つ挙げてください。それぞれの方法について簡単に説明してください。",
+      "tags": ["パフォーマンス", "Web開発", "最適化"]
+    },
+    {
+      "id": 35,
+      "title": "TTFBとは何か",
+      "content": "TTFB（Time to First Byte）とは何ですか？その改善方法を説明してください。",
+      "tags": ["パフォーマンス", "TTFB", "Web開発"]
+    },
+    {
+      "id": 36,
+      "title": "ブラウザキャッシュの仕組み",
+      "content": "ブラウザキャッシュの仕組みを説明してください。その利点についても述べてください。",
+      "tags": ["パフォーマンス", "キャッシュ", "ブラウザ"]
+    },
+    {
+      "id": 37,
+      "title": "画像最適化の方法",
+      "content": "画像最適化の主な方法を説明してください。また、それぞれの利点について述べてください。",
+      "tags": ["パフォーマンス", "画像", "最適化"]
+    },
+    {
+      "id": 38,
+      "title": "レイジーロードとは何か",
+      "content": "レイジーロード（Lazy Load）とは何ですか？その利点について説明してください。",
+      "tags": ["パフォーマンス", "最適化", "Web開発"]
     }
   ]
 }

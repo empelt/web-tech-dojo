@@ -102,28 +102,45 @@ const QuestionsPage = () => {
   useEffect(() => {
     setFilteredQuestions(
       questions.filter((question) => {
-        if (title) {
-          return question.title.includes(title)
+        if (title && !question.title.includes(title)) {
+          return false
         }
-        if (selectedTagsValues.size > 0) {
-          return question.tags.some((tag) => selectedTagsValues.has(tag))
+        if (
+          selectedTagsValues.size > 0 &&
+          !question.tags.some((tag) => selectedTagsValues.has(tag))
+        ) {
+          return false
         }
         if (selectedBookmarkValues.size > 0) {
-          switch (question.isBookmarked) {
-            case true:
-              return selectedBookmarkValues.has('isBookmarked')
-            default:
-              return selectedBookmarkValues.has('isNotBookmarked')
+          if (
+            question.isBookmarked &&
+            !selectedBookmarkValues.has('isBookmarked')
+          ) {
+            return false
+          }
+          if (
+            !question.isBookmarked &&
+            !selectedBookmarkValues.has('isNotBookmarked')
+          ) {
+            return false
           }
         }
         if (selectedProgressValues.size > 0) {
-          switch (question.progress) {
-            case 0:
-              return selectedProgressValues.has('todo')
-            case 100:
-              return selectedProgressValues.has('completed')
-            default:
-              return selectedProgressValues.has('inProgress')
+          if (question.progress <= 0 && !selectedProgressValues.has('todo')) {
+            return false
+          }
+          if (
+            question.progress === 100 &&
+            !selectedProgressValues.has('completed')
+          ) {
+            return false
+          }
+          if (
+            question.progress > 0 &&
+            question.progress < 100 &&
+            !selectedProgressValues.has('inProgress')
+          ) {
+            return false
           }
         }
         return true
@@ -139,7 +156,7 @@ const QuestionsPage = () => {
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-2xl font-bold mt-24 mb-4">Questions</h1>
+      <h1 className="text-2xl font-bold mt-24 mb-4">問題一覧</h1>
       <div className="flex flex-col gap-4">
         <Toolbar filterState={filterState} />
         <QuestionsTable
