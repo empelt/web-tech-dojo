@@ -7,5 +7,7 @@ import (
 )
 
 type GenaiClient interface {
-	GenerateContentFromText(ctx context.Context, message string) (*infrastructures.GenerateContentResponse, error)
+	CreateCachedContent(ctx context.Context, content string) (string, error)
+	GetActiveCachedContentName(ctx context.Context) (string, error)
+	GenerateContentFromText(ctx context.Context, message string, cachedContentName string) (*infrastructures.GenerateContentResponse, error)
 }

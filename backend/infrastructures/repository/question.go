@@ -36,7 +36,7 @@ func (r *QuestionRepository) FindQuestion(ctx context.Context, id int) (*models.
 }
 
 func (r *QuestionRepository) GetAllQuestions(ctx context.Context) ([]models.Question, error) {
-	itr := r.firestore.Client.Collection(r.collectionName).Documents(ctx)
+	itr := r.firestore.Client.Collection(r.collectionName).OrderBy("id", firestore.Asc).Documents(ctx)
 	questions := []models.Question{}
 	for {
 		doc, err := itr.Next()

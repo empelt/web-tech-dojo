@@ -5,13 +5,16 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/empelt/web-tech-dojo/models"
 	"github.com/empelt/web-tech-dojo/services/port"
 )
 
 type PostQuestionAnswerResponse struct {
-	Message string
+	Message             string `json:"message"`
+	Score               int    `json:"score"`
+	SuggestedQuestionId int    `json:"suggested_question_id"`
 }
 
 type AnswerService struct {
@@ -63,11 +66,36 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 		return nil, err
 	}
 
-	// 3. AIへ送るプロンプトを作成
+	// 3.1 AIへ送るプロンプトを作成
 	prompt := buildPromptMessage(q, a, message)
 
+	// 3.2 キャッシュコンテンツの確認
+	activeCachedContent, err := s.genaiClient.GetActiveCachedContentName(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if activeCachedContent == "" {
+		qs, err := s.questionRepository.GetAllQuestions(ctx)
+		if err != nil {
+			return nil, err
+		}
+		cachedPrompt := buildCachedContent(qs)
+		// キャッシュ可能なトークン数には最低設定があるのでデータサイズによって分岐
+		if utf8.RuneCountInString(cachedPrompt) > 32768 {
+			activeCachedContent, err = s.genaiClient.CreateCachedContent(ctx, cachedPrompt)
+			if err != nil {
+				return nil, err
+			}
+			if activeCachedContent == "" {
+				return nil, models.SetCachedContentFailedError
+			}
+		} else {
+			prompt = cachedPrompt + prompt
+		}
+	}
+
 	// 4. 解答に対するAIの返信を生成
-	response, err := s.genaiClient.GenerateContentFromText(ctx, prompt)
+	response, err := s.genaiClient.GenerateContentFromText(ctx, prompt, activeCachedContent)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +105,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	m := a.Messages
 	m = append(m, models.CreateMessage(message, true, models.MessageParams{
 		Score:              response.Score,
-		SugestedQuestionId: -1,
+		SugestedQuestionId: response.SuggestedQuestionId,
 	}))
 	m = append(m, models.CreateMessage(response.Message, false, models.MessageParams{
 		Score:              0,
@@ -131,7 +159,9 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	}
 
 	return &PostQuestionAnswerResponse{
-		Message: response.Message,
+		Message:             response.Message,
+		Score:               response.Score,
+		SuggestedQuestionId: response.SuggestedQuestionId,
 	}, err
 }
 
@@ -156,4 +186,13 @@ func buildPromptMessage(q *models.Question, a *models.Answer, m string) string {
 以下が今回の解答です。
 %s
 `, q.Content, prevPrompt, builder.String(), m)
+}
+
+func buildCachedContent(qs []models.Question) string {
+	var builder strings.Builder
+	builder.WriteString("以下が問題の一覧です。\n\n")
+	for _, q := range qs {
+		builder.WriteString(fmt.Sprintf("id: %d, title: %s, content: %s\n", q.Id, q.Title, q.Content))
+	}
+	return builder.String()
 }

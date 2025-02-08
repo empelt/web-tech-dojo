@@ -73,5 +73,5 @@ func (h *AnswerHandler) PostQuestionAnswer(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
-	return c.JSON(http.StatusOK, PostQuestionAnswerResponse{Answer: res.Message})
+	return c.JSON(http.StatusOK, res)
 }
