@@ -3,6 +3,7 @@ package handlers
 import (
 	"errors"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -17,7 +18,8 @@ func NewAnswerHandler(as AuthService, cs AnswerService) (*AnswerHandler, error) 
 }
 
 func getIdToken(c echo.Context) string {
-	authorization := echo.Context.Request(c).Header.Get("Authorization")
+	tagName := os.Getenv("AUTHORIZATION_HEADER_TAG_NAME")
+	authorization := echo.Context.Request(c).Header.Get(tagName)
 	return strings.TrimPrefix(authorization, "Bearer ")
 }
 
