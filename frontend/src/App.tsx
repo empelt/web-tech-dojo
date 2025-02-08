@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router'
 
 import { Button } from './components/ui/button'
+import { auth } from './lib/firebase'
 
 const App = () => {
   const navigate = useNavigate()
@@ -20,7 +21,7 @@ const App = () => {
         <p>さあ、一緒に次のステップに進みませんか？</p>
       </div>
       <Button className="mt-6" onClick={() => navigate('/signup')}>
-        登録してはじめる
+        {auth.currentUser ? '問題一覧へ' : '登録して始める'}
       </Button>
     </div>
   )

@@ -135,9 +135,9 @@ const QuestionsTable = ({ questions, onBookmark, loading }: Props) => {
                 <div className="flex items-center ">
                   <Progress
                     className="w-[100px] mr-1"
-                    value={question.progress}
+                    value={Math.max(question.progress, 0)}
                   />
-                  <span>{question.progress}%</span>
+                  <span>{Math.max(question.progress, 0)}%</span>
                 </div>
               </TableCell>
               <TableCell className="text-right">
