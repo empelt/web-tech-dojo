@@ -53,7 +53,7 @@ func main() {
 	}
 
 	// Initialize Repository
-	questionRepository, err := repository.NewQuestionRepository(firestore)
+	questionRepository, err := repository.NewQuestionRepository(firestore, nil)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -64,6 +64,11 @@ func main() {
 	}
 
 	userRepository, err := repository.NewUserRepository(firestore)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	transaction, err := repository.NewTxExecutor(firestore)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
@@ -84,7 +89,7 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	questionService, err := services.NewQuestionService(questionRepository, userService)
+	questionService, err := services.NewQuestionService(questionRepository, userService, transaction)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}

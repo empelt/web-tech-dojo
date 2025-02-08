@@ -2,10 +2,13 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"slices"
 	"time"
 
+	"github.com/empelt/web-tech-dojo/infrastructures"
 	"github.com/empelt/web-tech-dojo/models"
+	"github.com/empelt/web-tech-dojo/services/port"
 )
 
 type GetQuestionResponse struct {
@@ -25,10 +28,17 @@ type QuestionSummary struct {
 	Progress     int      `json:"progress"`
 }
 
-func NewQuestionService(questionRepository QuestionRepository, userService *UserService) (*QuestionService, error) {
+type QuestionService struct {
+	questionRepository port.QuestionRepository
+	userService        *UserService
+	tx                 port.TxExecutor
+}
+
+func NewQuestionService(questionRepository port.QuestionRepository, userService *UserService, tx port.TxExecutor) (*QuestionService, error) {
 	return &QuestionService{
 		questionRepository: questionRepository,
 		userService:        userService,
+		tx:                 tx,
 	}, nil
 }
 
@@ -95,4 +105,34 @@ func (s *QuestionService) GetAllQuestions(ctx context.Context, uid string) ([]Qu
 		})
 	}
 	return qss, nil
+}
+
+func (s *QuestionService) UpsertQuestions(ctx context.Context, questions []models.Question) error {
+	totalQuestions := len(questions)
+	if totalQuestions == 0 {
+		return nil
+	}
+
+	// トランザクションの上限を超えないようにバッチに分けて挿入
+	for i := 0; i < totalQuestions; i += infrastructures.MaxOperationsPerTransaction {
+		end := i + infrastructures.MaxOperationsPerTransaction
+		if end > totalQuestions {
+			end = totalQuestions
+		}
+		batchQuestions := questions[i:end]
+
+		err := s.tx.ExecQuestionTx(ctx, func(ctx context.Context, repo port.QuestionRepository) error {
+			for _, question := range batchQuestions {
+				err := repo.UpsertQuestionWithTx(ctx, question)
+				if err != nil {
+					return fmt.Errorf("failed to upsert question: %v", err)
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			return fmt.Errorf("failed to execute transaction: %v", err)
+		}
+	}
+	return nil
 }

@@ -1,0 +1,18 @@
+{
+  "questions": [
+    {
+      "id": 2,
+      "title": "How to implement API authentication",
+      "content": "I'm building a REST API and need secure authentication. What are the best practices?",
+      "tags": ["api", "security", "authentication"],
+      "createdAt": "2024-01-20T10:30:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Docker container networking",
+      "content": "How do I setup communication between multiple Docker containers?",
+      "tags": ["docker", "networking", "containers"],
+      "createdAt": "2024-01-21T15:45:00Z"
+    }
+  ]
+}

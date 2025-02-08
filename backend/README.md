@@ -28,9 +28,9 @@ backend
 ├── models            // プリミティブな値を管理する
 |   └── ...
 ├── services          // ビジネスロジックを管理する
+|   ├── port/
 |   ├── mock/
-|   ├── ...
-|   └── interface.go
+|   └── ...
 ├── validator         // 入力データのバリデーションを管理する
 |   └── validator.go
 ├── Dockerfils

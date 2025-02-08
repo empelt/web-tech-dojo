@@ -5,9 +5,14 @@ import (
 	"slices"
 
 	"github.com/empelt/web-tech-dojo/models"
+	"github.com/empelt/web-tech-dojo/services/port"
 )
 
-func NewUserService(bookmarkRepository UserRepository) (*UserService, error) {
+type UserService struct {
+	userRepository port.UserRepository
+}
+
+func NewUserService(bookmarkRepository port.UserRepository) (*UserService, error) {
 	return &UserService{
 		userRepository: bookmarkRepository,
 	}, nil
