@@ -5,6 +5,12 @@ export type Message = {
   text: string
 }
 
+export type MessageResponse = {
+  message: string
+  score: number
+  suggestedQuestionId: number
+}
+
 type Params = {
   score?: number
   suggestedQuestion?: number

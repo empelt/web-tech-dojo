@@ -102,7 +102,10 @@ const QuestionsPage = () => {
   useEffect(() => {
     setFilteredQuestions(
       questions.filter((question) => {
-        if (title && !question.title.includes(title)) {
+        if (
+          title &&
+          !question.title.toLowerCase().includes(title.toLowerCase())
+        ) {
           return false
         }
         if (
@@ -156,7 +159,7 @@ const QuestionsPage = () => {
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-2xl font-bold mt-24 mb-4">問題一覧</h1>
+      <h1 className="text-2xl font-bold mt-16 mb-4">問題一覧</h1>
       <div className="flex flex-col gap-4">
         <Toolbar filterState={filterState} />
         <QuestionsTable

@@ -2,14 +2,18 @@ import { useEffect, useRef, useState } from 'react'
 
 import axios, { AxiosResponse } from 'axios'
 import { FaArrowUp } from 'react-icons/fa'
+import ReactMarkdown from 'react-markdown'
 import { useNavigate, useParams } from 'react-router'
+
+import CompleteDialog from './components/CompleteDialog'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/hooks/use-toast'
-import { Message } from '@/types/message'
+import { Message, MessageResponse } from '@/types/message'
 import { Question } from '@/types/question'
 
 const ChatPage = () => {
@@ -21,6 +25,8 @@ const ChatPage = () => {
   const [content, setContent] = useState<string>('')
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState<string>('')
+  const [completeDialogOpen, setCompleteDialogOpen] = useState(false)
+  const [isCompleted, setIsCompleted] = useState(false)
 
   const navigate = useNavigate()
   const { id } = useParams()
@@ -58,6 +64,14 @@ const ChatPage = () => {
         )
         if (!ignore && messagesResponseStatus === 200) {
           setMessages(messagesResponse.messages)
+          // FIXME: 完了したかどうかの判定は別のAPIから取得するようにする
+          messagesResponse.messages.some((message) => {
+            if (message.params?.score === 100) {
+              setIsCompleted(true)
+              return true
+            }
+            return false
+          })
         }
       } catch {
         toast({
@@ -90,19 +104,34 @@ const ChatPage = () => {
     ])
     setInput('')
     try {
-      const { data, status }: AxiosResponse<{ message: string }> =
-        await axios.post(`/api/question/${id}/answer`, {
+      const { data, status }: AxiosResponse<MessageResponse> = await axios.post(
+        `/api/question/${id}/answer`,
+        {
           message: input,
-        })
+        },
+      )
       if (status === 200) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            text: data.message,
-            sentByUser: false,
-            createdAt: new Date().toISOString(),
-          },
-        ])
+        setMessages((prevMessages) => {
+          const updatedMessages = [...prevMessages]
+          if (updatedMessages.length > 0) {
+            updatedMessages[updatedMessages.length - 1] = {
+              ...updatedMessages[updatedMessages.length - 1],
+              params: { score: data.score },
+            }
+          }
+          return [
+            ...updatedMessages,
+            {
+              text: data.message,
+              sentByUser: false,
+              createdAt: new Date().toISOString(),
+            },
+          ]
+        })
+        if (data.score === 100) {
+          setIsCompleted(true)
+          setCompleteDialogOpen(true)
+        }
       }
     } catch {
       toast({
@@ -124,7 +153,7 @@ const ChatPage = () => {
 
   if (loading) {
     return (
-      <div className='grid grid-rows-[auto_1fr_auto] overflow-hidden h-full'>
+      <div className="grid grid-rows-[auto_1fr_auto] overflow-hidden h-full max-w-[800px] mx-auto">
         <Skeleton className="mt-4 h-12 w-full rounded-lg" />
         <div className="flex-1 overflow-y-auto p-4">
           <div className="mb-4 w-full flex justify-end">
@@ -155,16 +184,23 @@ const ChatPage = () => {
   }
 
   return (
-    <div className='grid grid-rows-[auto_1fr_auto] overflow-hidden h-full'>
-      <div className="w-full mt-4 p-2 mx-auto bg-gray-100 flex justify-start rounded-lg items-center max-w-[800px]">
-        <div className="p-2 bg-white rounded-lg mr-2">Q{id}</div>
-        <h1>{content}</h1>
+    <div className="grid grid-rows-[auto_1fr_auto] overflow-hidden h-full">
+      <div className="flex justify-row items-center justify-center max-w-[800px] mx-auto p-4  mt-4">
+        <Button className="mr-2" onClick={() => navigate('/questions')}>
+          問題一覧に戻る
+        </Button>
+        <div className="w-full p-2 mx-auto bg-gray-100 flex justify-start rounded-lg items-center max-w-[800px]">
+          <div className="p-2 bg-white rounded-lg mr-2">Q{id}</div>
+          <h1>{content}</h1>
+        </div>
       </div>
       <div className="hidden-scrollbar flex-1 overflow-y-auto p-4">
         {messages.map((message, index) => {
           if (!message.sentByUser) {
             return (
-              <div className="mx-auto mb-2 w-full text-left flex max-w-[800px]" key={index}>
+              <div
+                className="mx-auto mb-2 w-full text-left flex max-w-[800px]"
+                key={index}>
                 <Avatar>
                   <AvatarImage
                     alt="avatar image"
@@ -173,14 +209,24 @@ const ChatPage = () => {
                   <AvatarFallback>w</AvatarFallback>
                   <span className="sr-only">avatar icon</span>
                 </Avatar>
-                <div className="inline-block p-2 rounded">{message.text}</div>
+                <div className="inline-block p-2 rounded">
+                  <ReactMarkdown>{message.text}</ReactMarkdown>
+                </div>
               </div>
             )
           } else {
             return (
-              <div className="mx-auto mb-2 w-full text-right max-w-[800px]" key={index}>
+              <div
+                className="mx-auto mb-2 w-full text-right max-w-[800px]"
+                key={index}>
                 <div className="inline-block px-3 py-2 bg-gray-200 rounded-xl text-left max-w-[80%]">
                   {message.text}
+                </div>
+                <div className="flex justify-end">
+                  <Progress
+                    className="mt-2 max-w-[80%]"
+                    value={message.params?.score}
+                  />
                 </div>
               </div>
             )
@@ -196,6 +242,7 @@ const ChatPage = () => {
           onClick={() => document.getElementById('chat-input')?.focus()}>
           <Textarea
             className="resize-none max-h-32 border-none shadow-none focus-visible:ring-0"
+            disabled={waiting || isCompleted}
             id="chat-input"
             onChange={(e) => setInput(e.target.value)}
             onInput={(e) => {
@@ -203,10 +250,12 @@ const ChatPage = () => {
               target.style.height = 'auto'
               target.style.height = `${target.scrollHeight}px`
             }}
-            placeholder="メッセージを入力"
+            placeholder={
+              isCompleted ? 'この問題は完了しました' : 'メッセージを入力'
+            }
             value={input}
           />
-          {waiting ? (
+          {waiting || isCompleted ? (
             <Button className="ml-2 rounded-full h-8 w-8" disabled>
               <FaArrowUp />
             </Button>
@@ -220,6 +269,10 @@ const ChatPage = () => {
           AIの回答は必ずしも正しいとは限りません。重要な情報は確認するようにしてください。
         </p>
       </div>
+      <CompleteDialog
+        onClose={() => setCompleteDialogOpen(false)}
+        open={completeDialogOpen}
+      />
     </div>
   )
 }

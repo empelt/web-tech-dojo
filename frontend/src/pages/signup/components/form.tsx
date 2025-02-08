@@ -73,7 +73,7 @@ const SignupForm = () => {
                 <img alt="logo" className="w-14" src="/icon.svg" />
                 <span className="sr-only">WebTech Dojo</span>
               </a>
-              <h1 className="text-xl font-bold">Welcome to WebTech Dojo</h1>
+              <h1 className="text-xl font-bold">Welcome to WebTech道場</h1>
               <div className="text-center text-sm text-balance text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
                 Have an account? <Link to="/login">Log in</Link>
               </div>
