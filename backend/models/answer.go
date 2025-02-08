@@ -40,14 +40,11 @@ type MessageParams struct {
 	SugestedQuestionId int `firestore:"suggestedQuestion,omitempty"`
 }
 
-func CreateMessage(m string, sentByUser bool) Message {
+func CreateMessage(m string, sentByUser bool, param MessageParams) Message {
 	return Message{
 		Text:       m,
 		SentByUser: sentByUser,
-		Params: MessageParams{
-			Score:              0,
-			SugestedQuestionId: -1,
-		},
-		CreatedAt: time.Now(),
+		Params:     param,
+		CreatedAt:  time.Now(),
 	}
 }
