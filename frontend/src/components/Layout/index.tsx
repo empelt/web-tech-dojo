@@ -32,7 +32,7 @@ const Layout = ({
 
   return (
     <div className={ showFooter ? 'h-[100vh] grid grid-rows-[1fr_auto]' : 'h-[100vh]' }>
-      <div className= { showHeader ? 'max-h-full mx-auto grid grid-rows-[auto_1fr] overflow-hidden' : '' }>
+      <div className= { showHeader ? 'h-full mx-auto grid grid-rows-[auto_1fr] overflow-hidden' : '' }>
         {showHeader && <Header />}
         <div className='overflow-scroll hidden-scrollbar pb-4'>
           <Outlet />
