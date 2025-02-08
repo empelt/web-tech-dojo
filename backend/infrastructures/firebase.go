@@ -7,6 +7,10 @@ import (
 	firebase "firebase.google.com/go"
 )
 
+// firestore has a limit of 500 operations per transaction
+// see https://cloud.google.com/firestore/quotas?hl=ja&utm_source=chatgpt.com#writes_and_transactions
+const MaxOperationsPerTransaction = 500
+
 func NewFirebaseApp(ctx context.Context) (*Firebase, error) {
 	conf := &firebase.Config{ProjectID: os.Getenv("GCP_PROJECT_ID")}
 	app, err := firebase.NewApp(ctx, conf)

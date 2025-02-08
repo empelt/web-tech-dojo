@@ -7,13 +7,21 @@ import (
 	"time"
 
 	"github.com/empelt/web-tech-dojo/models"
+	"github.com/empelt/web-tech-dojo/services/port"
 )
 
 type PostQuestionAnswerResponse struct {
 	Message string
 }
 
-func NewAnswerService(genaiClient GenaiClient, userRepository UserRepository, questionRepository QuestionRepository, answerRepository AnswerRepository) (*AnswerService, error) {
+type AnswerService struct {
+	genaiClient        port.GenaiClient
+	userRepository     port.UserRepository
+	questionRepository port.QuestionRepository
+	answerRepository   port.AnswerRepository
+}
+
+func NewAnswerService(genaiClient port.GenaiClient, userRepository port.UserRepository, questionRepository port.QuestionRepository, answerRepository port.AnswerRepository) (*AnswerService, error) {
 	return &AnswerService{
 		genaiClient:        genaiClient,
 		userRepository:     userRepository,

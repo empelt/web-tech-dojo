@@ -8,6 +8,10 @@ import (
 	"github.com/empelt/web-tech-dojo/models"
 )
 
+type AuthService struct {
+	firebaseAuth *infrastructures.FirebaseAuth
+}
+
 func NewAuthService(firebaseAuth *infrastructures.FirebaseAuth) (*AuthService, error) {
 	return &AuthService{
 		firebaseAuth: firebaseAuth,
