@@ -52,3 +52,4 @@ main.go → handlers → services → infrastructures の一方通行の package
 | -------------- | ------------------------------ | ------------ | -------------- |
 | PORT           | バックエンドサーバのポート番号 | 8080         |                |
 | GCP_PROJECT_ID | GCP のプロジェクト ID          |              |                |
+| AUTHORIZATION_HEADER_TAG_NAME | ヘッダのAuthorizationのタグ名 | | Authorization |
