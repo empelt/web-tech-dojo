@@ -1,6 +1,6 @@
 # backend
 
-Web Tech Dojo のバックエンド(Echo)です。
+web-tech-dojo のバックエンド(Echo)です。
 
 ## 環境構築
 
@@ -48,9 +48,9 @@ main.go → handlers → services → infrastructures の一方通行の package
 
 以下の環境変数を設定してください
 
-| 変数名         | 役割                           | デフォルト値 | DEV 環境での値 |
-| -------------- | ------------------------------ | ------------ | -------------- |
-| PORT           | バックエンドサーバのポート番号 | 8080         |                |
-| GCP_PROJECT_ID | GCP のプロジェクト ID          |              |                |
-| AUTHORIZATION_HEADER_TAG_NAME | ヘッダのAuthorizationのタグ名 | | Authorization |
-| ALLOW_ORIGINS | CORSのAllowOrigins | | http://localhost:5173 |
+| 変数名                        | 役割                            | デフォルト値 | DEV 環境での値        |
+| ----------------------------- | ------------------------------- | ------------ | --------------------- |
+| PORT                          | バックエンドサーバのポート番号  | 8080         |                       |
+| GCP_PROJECT_ID                | GCP のプロジェクト ID           |              |                       |
+| AUTHORIZATION_HEADER_TAG_NAME | ヘッダの Authorization のタグ名 |              | Authorization         |
+| ALLOW_ORIGINS                 | CORS の AllowOrigins            |              | http://localhost:5173 |
