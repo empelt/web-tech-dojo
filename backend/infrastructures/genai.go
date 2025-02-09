@@ -36,7 +36,7 @@ func NewGenai(ctx context.Context) (*Genai, error) {
 func (g *Genai) CreateCachedContent(ctx context.Context, content string) (string, error) {
 	cachedContent := &genai.CachedContent{
 		Model:      modelName,
-		Expiration: genai.ExpireTimeOrTTL{TTL: 24 * 7 * time.Hour},
+		Expiration: genai.ExpireTimeOrTTL{TTL: 60 * time.Minute},
 		Contents: []*genai.Content{
 			{
 				Role:  "user",
