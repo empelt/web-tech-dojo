@@ -21,40 +21,31 @@
   <img src="https://img.shields.io/badge/Google%20Gemini-886FBF?style=for-the-badge&logo=googlegemini&logoColor=fff">
 </p>
 
-## 目次
+## アプリ名
 
-1. [プロジェクトについて](#プロジェクトについて)
-2. [環境](#環境)
-3. [ディレクトリ構成](#ディレクトリ構成)
-4. [開発環境構築](#開発環境構築)
-5. [環境変数の一覧](#環境変数の一覧)
+WebTech 道場
 
-## プロジェクト名
+## アプリについて
 
-Web Tech Dojo
-
-## プロジェクトについて
-
-WebTechDojo は、Web 技術に特化した学習をサポートするためのインタラクティブなトレーニングプラットフォームです。このアプリは、ユーザーが技術的な質問に答えたり、理解が浅い箇所を AI が自動的に見つけ出し、深堀りの質問を提示することで、効率的な学習を促します。
+WebTech 道場 は、Web 技術に特化した学習をサポートするためのインタラクティブなトレーニングプラットフォームです。
+このアプリは、ユーザーが技術的な質問に答えたり、理解が浅い箇所を AI が自動的に見つけ出し、深堀りの質問を提示することで、効率的な学習を促します。
 
 ## 環境
 
 - フロントエンド: React, Typescript, Tailwind CSS, shadcn/ui
 - バックエンド: Go, Echo
-- AI モデル: Google Cloud's Vertex AI
+- AI モデル: Vertex AI API for Gemini
 - インフラ: Google Cloud Run, Firebase
 
 その他のパッケージは package.json を参照してください
 
 ## ディレクトリ構成
 
-後で書く
-
 ```
-.
-├── backend
-├── frontend
-└── README.md
+web-tech-dojo
+├── backend/  バックエンド(Go)
+├── frontend/ フロントエンド(React)
+└── ...
 ```
 
 ## 開発環境構築
@@ -62,16 +53,7 @@ WebTechDojo は、Web 技術に特化した学習をサポートするための�
 docker を使わずに開発する場合は，それぞれ frontend ディレクトリ，backend ディレクトリ配下の README を参照してください。
 
 ```
-### Windows
-知らん
-
-### Ubuntu(WSL)
-sudo apt install docker-compose
-sudo docker-compose up --build -d
-
-### Mac
-brew install docker-compose
-docker-compose up --build -d
+$ docker compose up
 ```
 
 ### 環境変数の一覧

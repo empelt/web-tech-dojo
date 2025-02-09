@@ -1,26 +1,32 @@
-，# Google Cloud x Gemini API を用いた Web 技術学習支援アプリの開発
+<!-- # Google Cloud x Gemini API を用いた Web 技術学習支援アプリの開発 -->
 
 # はじめに
 
 [AI Agent Hackathon with Google Cloud](https://zenn.dev/hackathons/2024-google-cloud-japan-ai-hackathon) に参加するために、Google Cloud x Gemini API を用いた Web 技術学習支援システム「WebTech 道場」を開発しました。
 
+https://web-tech-dojo.benzen-games.com
+
+:::message alert
+このアプリは開発途中であり、突然データがすべて消える可能性があります。ご了承ください。
+:::
+
 本記事では、「WebTech 道場」の開発背景、機能概要、技術的な詳細、そして今後の展望についてご紹介します。
 
 ソースコードはこちらで公開しています
+
 https://github.com/empelt/web-tech-dojo
 
 # アプリ概要
 
 Web に関する問題を一覧から選んで回答すると、AI が理解が浅そうだと判断した箇所について深堀の質問をしてくれます。
 
-画像は後で変える
-![](https://storage.googleapis.com/zenn-user-upload/f162a298737a-20250209.png)
+![](https://storage.googleapis.com/zenn-user-upload/56a75b23fb9d-20250209.png)
 
 ## デモ動画
 
 実際にアプリを使用している様子を紹介しています。
 
-[YouTube 動画]
+https://youtu.be/RmRi2Nw4l4g
 
 # 対象とするユーザー像と課題
 
@@ -65,9 +71,13 @@ WebTech 道場では、チャット形式で AI と会話をするアウトプ�
 
 WebTech 道場では、その問題を解く上で必要な前提知識をユーザーが理解していないと AI が判断した場合、その前提知識を問う問題をレコメンドしてくれます。これにより、ユーザーは効率的に学習を進めることができます。
 
+![](https://storage.googleapis.com/zenn-user-upload/d36f62acbebe-20250209.png)
+
 ### 課題３：勉強のモチベーションを維持できない
 
 学習の結果は全て保存され、振り返って確認することができます。また、以前解けなかった問題に再挑戦することで学習の成果を実感することができます。
+
+![](https://storage.googleapis.com/zenn-user-upload/ed6309723942-20250209.png)
 
 :::message
 WebTech 道場はあくまで、未知の知とアウトプットを目的としたアプリケーションであり、インプットのための用途としては想定していません。
