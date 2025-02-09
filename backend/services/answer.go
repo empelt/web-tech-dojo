@@ -14,7 +14,7 @@ import (
 type PostQuestionAnswerResponse struct {
 	Message             string `json:"message"`
 	Score               int    `json:"score"`
-	SuggestedQuestionId int    `json:"suggested_question_id"`
+	SuggestedQuestionId int    `json:"suggestedQuestionId"`
 }
 
 type AnswerService struct {
@@ -109,7 +109,7 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 	}))
 	m = append(m, models.CreateMessage(response.Message, false, models.MessageParams{
 		Score:              0,
-		SugestedQuestionId: -1,
+		SugestedQuestionId: response.SuggestedQuestionId,
 	}))
 	if _, err := s.answerRepository.UpsertAnswer(ctx, &models.Answer{
 		UserId:     a.UserId,
@@ -168,12 +168,17 @@ func (s *AnswerService) PostQuestionAnswer(ctx context.Context, uid string, qid 
 func buildPromptMessage(q *models.Question, a *models.Answer, m string) string {
 	var builder strings.Builder
 	for _, mss := range a.Messages {
+		if !mss.SentByUser {
+			builder.WriteString("AI: ")
+		} else {
+			builder.WriteString("User: ")
+		}
 		builder.WriteString(mss.Text)
 		builder.WriteString("\n")
 	}
 	prevPrompt := ""
 	if len(a.Messages) > 0 {
-		prevPrompt = `この問題についての過去の会話履歴が以下に続きます。`
+		prevPrompt = `この問題についての過去の会話履歴が以下に続きます。AI: がAIの発言、User: がユーザーの発言です。`
 	}
 
 	return fmt.Sprintf(
@@ -181,9 +186,10 @@ func buildPromptMessage(q *models.Question, a *models.Answer, m string) string {
 今回の問題は、
 %s
 という問題でした。
-%s, 
-%s,
-以下が今回の解答です。
+%s
+%s
+以下が今回のユーザーの解答です。
+
 %s
 `, q.Content, prevPrompt, builder.String(), m)
 }

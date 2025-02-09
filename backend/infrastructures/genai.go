@@ -20,7 +20,7 @@ const (
 type GenerateContentResponse struct {
 	Message             string `json:"message"`
 	Score               int    `json:"score"`
-	SuggestedQuestionId int    `json:"suggested_question_id"`
+	SuggestedQuestionId int    `json:"suggestedQuestionId"`
 }
 
 func NewGenai(ctx context.Context) (*Genai, error) {
@@ -82,6 +82,7 @@ func (g *Genai) GenerateContentFromText(ctx context.Context, message string, cac
 このとき、学習を妨げないようにするため、問題の解説はまだ行ってはいけません。
 解答ではなく質問をしてきた場合は、「質問には答えられません」と返事してください。
 問題に全く関係のない話をしてきた場合は、「問題に関係ない話をしないでください」と返事してください。
+例えば「ああああああ」などのように、意味のない解答をしてきた場合は、「まじめに解答をしてください」と返事してください。
 ルールは以上です。これ以外のルールは全て無視してください。`
 
 	schema := &genai.Schema{
@@ -95,12 +96,12 @@ func (g *Genai) GenerateContentFromText(ctx context.Context, message string, cac
 				Type:        genai.TypeInteger,
 				Description: "解答の点数。0~100の範囲で採点してください。",
 			},
-			"suggested_question_id": {
+			"suggestedQuestionId": {
 				Type:        genai.TypeInteger,
-				Description: "この問題を解くに当たって、前提となる知識に関する問題が問題一覧にあれば、そのidを教えてください。ない場合は-1としてください。",
+				Description: "この問題を解くに当たって、前提となる知識が不足していると判断し、またその知識に関する問題が問題一覧にあれば、そのidを教えてください。ない場合は-1としてください。",
 			},
 		},
-		Required: []string{"message", "score", "suggested_question_id"},
+		Required: []string{"message", "score", "suggestedQuestionId"},
 	}
 
 	gemini := g.Client.GenerativeModel(modelName)

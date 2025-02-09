@@ -57,7 +57,7 @@ Web に関する問題を一覧から選んで回答すると、AI が理解が�
 
 勉強しても知識が定着しない理由は、アウトプットが足りていないことが原因だと考えています。アウトプットをすることで、正確に理解していない箇所に気が付くことができ、知識の定着にもつながります。
 
-WebTech 道場では、チャット形式で AI と会話をするアウトプットの場を提供します。また、出題される問題に解答すると、AI がその解答を分析して、説明が不十分な部分について深堀りの質問をしてくれます。ユーザーの解答にはスコアが付けられ、スコアが 100点になるとクリアとなります。クリアするころにはその問題について深く理解したと言っても良いでしょう。
+WebTech 道場では、チャット形式で AI と会話をするアウトプットの場を提供します。また、出題される問題に解答すると、AI がその解答を分析して、説明が不十分な部分について深堀りの質問をしてくれます。ユーザーの解答にはスコアが付けられ、スコアが 100 点になるとクリアとなります。クリアするころにはその問題について深く理解したと言っても良いでしょう。
 
 ### 課題２：効率的な勉強ができていない
 
@@ -85,7 +85,7 @@ WebTech 道場はあくまで、未知の知とアウトプットを目的とし
 
 ## システムアーキテクチャ
 
-下記に「WebTech道場」のシステムアーキテクチャの図を示します。
+下記に「WebTech 道場」のシステムアーキテクチャの図を示します。
 
 ![システムアーキテクチャ図](https://storage.googleapis.com/zenn-user-upload/d6ef0b2c3143-20250209.png)
 
@@ -104,11 +104,11 @@ Cloud SQL を使って RDB にすれば簡単だったかもしれませんが�
 
 「WebTech 道場」の開発には、以下の技術スタックを使用しました。
 
-| カテゴリ | 名称 |
-| ---- | ---- |
-| AI | Vertex AI API for Gemini |
+| カテゴリ       | 名称                                                   |
+| -------------- | ------------------------------------------------------ |
+| AI             | Vertex AI API for Gemini                               |
 | フロントエンド | Vite + React (TypeScript) <br> Tailwind CSS, shadcn/ui |
-| バックエンド | echo (Go 言語)  |
+| バックエンド   | echo (Go 言語)                                         |
 
 ## 処理のフロー
 
@@ -154,12 +154,12 @@ schema := &genai.Schema{
 			Type:        genai.TypeInteger,
 			Description: "解答の点数。0~100の範囲で採点してください。",
 		},
-		"suggested_question_id": {
+		"suggestedQuestionId": {
 			Type:        genai.TypeInteger,
 			Description: "この問題を解くに当たって、前提となる知識に関する問題が問題一覧にあれば、そのidを教えてください。ない場合は-1としてください。",
 		},
 	},
-	Required: []string{"message", "score", "suggested_question_id"},
+	Required: []string{"message", "score", "suggestedQuestionId"},
 }
 gemini := g.Client.GenerativeModel(modelName)
 gemini.GenerationConfig.ResponseMIMEType = "application/json"
@@ -170,9 +170,9 @@ gemini.GenerationConfig.ResponseSchema = schema
 
 「WebTech 道場」は、まだ開発途上であり、今後の機能拡張や改善が期待されます。具体的には、以下の点に注力していく予定です。
 
- - 学習コンテンツの拡充：より多くの Web 技術に関する問題データを拡充。
- - ダッシュボード機能: 学習成果をさらに分かりやすくビジュアライズする機能を実装。
- - コミュニティ機能：ユーザ同士が交流できるコミュニティ機能を実装。
+- 学習コンテンツの拡充：より多くの Web 技術に関する問題データを拡充。
+- ダッシュボード機能: 学習成果をさらに分かりやすくビジュアライズする機能を実装。
+- コミュニティ機能：ユーザ同士が交流できるコミュニティ機能を実装。
 
 # おわりに
 
@@ -185,6 +185,6 @@ gemini.GenerationConfig.ResponseSchema = schema
 
 # 参考文献
 
- - https://firebase.google.com/docs?hl=ja
- - https://cloud.google.com/docs?hl=ja
- - https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/overview?hl=ja
+- https://firebase.google.com/docs?hl=ja
+- https://cloud.google.com/docs?hl=ja
+- https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/overview?hl=ja

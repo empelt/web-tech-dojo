@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown'
 import { useNavigate, useParams } from 'react-router'
 
 import CompleteDialog from './components/CompleteDialog'
+import SuggestMessage from './components/suggestMessage'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -125,6 +126,7 @@ const ChatPage = () => {
               text: data.message,
               sentByUser: false,
               createdAt: new Date().toISOString(),
+              params: { suggestedQuestion: data.suggestedQuestionId },
             },
           ]
         })
@@ -198,20 +200,25 @@ const ChatPage = () => {
         {messages.map((message, index) => {
           if (!message.sentByUser) {
             return (
-              <div
-                className="mx-auto mb-2 w-full text-left flex max-w-[800px]"
-                key={index}>
-                <Avatar>
-                  <AvatarImage
-                    alt="avatar image"
-                    src="https://github.com/shadcn.png"
-                  />
-                  <AvatarFallback>w</AvatarFallback>
-                  <span className="sr-only">avatar icon</span>
-                </Avatar>
-                <div className="inline-block p-2 rounded">
-                  <ReactMarkdown>{message.text}</ReactMarkdown>
+              <div key={index}>
+                <div
+                  className="mx-auto mb-2 w-full text-left flex max-w-[800px]"
+                  key={index}>
+                  <Avatar className="shadow-lg">
+                    <AvatarImage alt="avatar image" src="/masterIcon.svg" />
+                    <AvatarFallback>w</AvatarFallback>
+                    <span className="sr-only">avatar icon</span>
+                  </Avatar>
+                  <div className="inline-block p-2 rounded">
+                    <ReactMarkdown>{message.text}</ReactMarkdown>
+                  </div>
                 </div>
+                {message.params?.suggestedQuestion &&
+                  message.params.suggestedQuestion != -1 && (
+                    <SuggestMessage
+                      questionId={message.params.suggestedQuestion}
+                    />
+                  )}
               </div>
             )
           } else {
