@@ -84,7 +84,7 @@ WebTech 道場はあくまで、未知の知とアウトプットを目的とし
 
 ## システムアーキテクチャ
 
-下記に「Web Tech道場」のシステムアーキテクチャの図を示します。
+下記に「Web Tech 道場」のシステムアーキテクチャの図を示します。
 
 ![システムアーキテクチャ図](https://storage.googleapis.com/zenn-user-upload/9ec0e7729a0b-20250209.png)
 
@@ -103,11 +103,11 @@ Cloud SQL を使って RDB にすれば簡単だったかもしれませんが�
 
 「Web Tech 道場」の開発には、以下の技術スタックを使用しました。
 
-| カテゴリ | 名称 |
-| ---- | ---- |
-| AI | Vertex AI API for Gemini |
-| フロントエンド | Vite + React |
-| バックエンド | echo (Go 言語)  |
+| カテゴリ       | 名称                     |
+| -------------- | ------------------------ |
+| AI             | Vertex AI API for Gemini |
+| フロントエンド | Vite + React             |
+| バックエンド   | echo (Go 言語)           |
 
 ## 処理のフロー
 
@@ -153,12 +153,12 @@ schema := &genai.Schema{
 			Type:        genai.TypeInteger,
 			Description: "解答の点数。0~100の範囲で採点してください。",
 		},
-		"suggested_question_id": {
+		"suggestedQuestionId": {
 			Type:        genai.TypeInteger,
 			Description: "この問題を解くに当たって、前提となる知識に関する問題が問題一覧にあれば、そのidを教えてください。ない場合は-1としてください。",
 		},
 	},
-	Required: []string{"message", "score", "suggested_question_id"},
+	Required: []string{"message", "score", "suggestedQuestionId"},
 }
 gemini := g.Client.GenerativeModel(modelName)
 gemini.GenerationConfig.ResponseMIMEType = "application/json"
