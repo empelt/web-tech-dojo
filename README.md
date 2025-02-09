@@ -1,6 +1,6 @@
-# web-tech-dojo
+# [web-tech-dojo](https://web-tech-dojo.benzen-games.com/)
 
-https://web-tech-dojo.benzen-games.com/
+<div><img src="https://github.com/user-attachments/assets/2ced517b-94e8-4fb7-9ffa-df4657def96c" style="width: 100%" /></div>
 
 <div id="top"></div>
 
