@@ -14,7 +14,7 @@ import (
 
 const (
 	location  = "asia-northeast1"
-	modelName = "gemini-1.5-pro-002"
+	modelName = "gemini-2.5-pro"
 )
 
 type GenerateContentResponse struct {
